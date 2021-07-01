@@ -1,382 +1,411 @@
-<?php include('connect.php');
-?>
-    <!-- Off-Canvas Category Menu-->
-    <div class="offcanvas-container" id="shop-categories">
-      <div class="offcanvas-header">
-        <h3 class="offcanvas-title">Shop by Categories</h3>
-      </div>
-      <nav class="offcanvas-menu">
-        <ul class="menu">
-		<?php
-                        $q="SELECT * FROM main_cat WHERE status = '1' ORDER BY sort ASC ";
-                        $r=mysqli_query($con,$q);
-                        while($rr=mysqli_fetch_array($r)){
-                        ?> 	
-          <li class="has-children"><span><a href="#"><?php echo $rr['name']; ?></a><span class="sub-menu-toggle"></span></span>
-            <ul class="offcanvas-submenu">
-				<?php
-                                    $main_id=$rr['main_id'];
-                                    $q1="SELECT * FROM sub_cat WHERE main_id='$main_id' and  status = '1' ORDER BY sort ASC ";
-                                    $ru=mysqli_query($con,$q1);
-                                    while($rr2=mysqli_fetch_array($ru)){
-                                    ?>
-              <li class="has-children"><span><a href="#"><?php echo $rr2['name']; ?></a><span class="sub-menu-toggle"></span></span>
-				  
-			        <ul class="offcanvas-submenu">
-						<?php
-                                            $sub_id=$rr2['sub_id'];
-                                            $q2="SELECT * FROM category WHERE sub_id= '$sub_id' and  status = '1' ORDER BY sort ASC";
-                                            $ru1=mysqli_query($con,$q2);
-                                            while ($rr3=mysqli_fetch_array($ru1)) {
-                                                # code...
-                                            ?>
-					  <li><a href="home.php?cat_id=<?php echo $rr3['cat_id']; ?>"><?php echo $rr3['name']; ?></a></li>
+<?php include 'connect.php';?>
+<!--sidebar wrapper -->
+		<div class="sidebar-wrapper" data-simplebar="true">
+			<div class="sidebar-header">
+				<div>
+					<a href="index.php"><img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon"></a>
+				</div>
+				<div>
+					<h4 class="logo-text">Synadmin</h4>
+				</div>
+				<div class="toggle-icon ms-auto"><i class='lni lni-close'></i>
+				</div>
+			</div>
+			<!--navigation-->
+			<ul class="metismenu" id="menu">
+				<li>
+					<a href="index.php">
+						<div class="parent-icon"><i class='bx bx-home'></i>
+						</div>
+						<div class="menu-title">Dashboard</div>
+					</a>
+				</li>
+				<li class="menu-label">Product</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-store-alt' ></i>
+						</div>
+						<div class="menu-title">Brand</div>
+					</a>
+					<ul>
+						<li> <a href="brand.php"><i class="bx bx-caret-right"></i>View Brand</a>
+						</li>
+						<li> <a href="addbrand.php"><i class="bx bx-caret-right"></i>Add Brand</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="lni lni-menu" ></i>
+						</div>
+						<div class="menu-title">Menu</div>
+					</a>
+					<ul>
+						<li> <a href="menu.php"><i class="bx bx-caret-right"></i>Main Menu</a>
+						</li>
+						<li> <a href="category.php"><i class="bx bx-caret-right"></i>Category</a>
+						<li> <a href="subcat.php"><i class="bx bx-caret-right"></i>Sub Category</a>	
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-category" ></i>
+						</div>
+						<div class="menu-title">Product</div>
+					</a>
+					<ul>
 						
-						<?php } ?>
+						<li> <a href="product.php"><i class="bx bx-caret-right"></i>View Products</a>
+						</li>
+						<li> <a href="addproduct.php"><i class="bx bx-caret-right"></i>Add Product</a>
+						</li>
+						<li> <a href="offerproduct.php"><i class="bx bx-caret-right"></i>Offers</a>
+						</li>
+						<li> <a  href="productslider.php"><i class="bx bx-caret-right"></i>Main Slider</a>
+						</li>
 					</ul>
-				  
-			  </li>
-				<?php } ?>
-            </ul>
-          </li>
-			
-		<?php } ?>	
-        </ul>
-      </nav>
-    </div>
-    <!-- Off-Canvas Mobile Menu-->
-    <div class="offcanvas-container" id="mobile-menu">
-		 <?php if(isset($_SESSION['SESS-ID'])) 
-         {?>
-		<a class="account-link" href="account-profile.php">
-			<?php 
-							            $id= $_SESSION['SESS-ID'];
-									   $qry = "SELECT * FROM login WHERE  u_id='$id'";
-								   $r1=mysqli_query($con,$qry);
-								   while($r=mysqli_fetch_array($r1))
-								   {
-							         ?>	
-        <div class="user-ava"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($r['image']); ?>">
-        </div>
-			<?php } ?>
-        <div class="user-info">
-          <h6 class="user-name active"><?php echo $_SESSION['SESS-NAME'] ?></h6>
-			<span class="text-sm text-white opacity-60">Welcome Back sir</span>
-        </div></a>
-		<?php } ?>
-      <nav class="offcanvas-menu">
-        <ul class="menu">
-		  <li class="has-children active"><span><a href="#">Shop by Categories</a><span class="sub-menu-toggle"></span></span>
-            <ul class="offcanvas-submenu">
-				<?php
-                        include 'connect.php';
-                        $q="SELECT * FROM main_cat WHERE status = '1' ORDER BY sort ASC ";
-                        $r=mysqli_query($con,$q);
-                        while($rr=mysqli_fetch_array($r)){
-                        ?> 
-              <li class="has-children"><span><a href="#"><?php echo $rr['name']; ?></a><span class="sub-menu-toggle"></span></span>
-                <ul class="offcanvas-submenu">
-					<?php
-                                    $main_id=$rr['main_id'];
-                                    $q1="SELECT * FROM sub_cat WHERE main_id='$main_id' and  status = '1' ORDER BY sort ASC ";
-                                    $ru=mysqli_query($con,$q1);
-                                    while($rr2=mysqli_fetch_array($ru)){
-                                    ?>
-                  <li class="has-children"><span><a href="#"><?php echo $rr2['name']; ?></a><span class="sub-menu-toggle"></span></span>
-					<ul class="offcanvas-submenu">
-						<?php
-                                            $sub_id=$rr2['sub_id'];
-                                            $q2="SELECT * FROM category WHERE sub_id= '$sub_id' and  status = '1' ORDER BY sort ASC";
-                                            $ru1=mysqli_query($con,$q2);
-                                            while ($rr3=mysqli_fetch_array($ru1)) {
-                                                # code...
-                                            ?>
-					  <li><a href="home.php?cat_id=<?php echo $rr3['cat_id']; ?>"><?php echo $rr3['name']; ?></a></li>
-						<?php } ?>
+				</li>
+				<li class="menu-label">Stock</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="lni lni-package" ></i>
+						</div>
+						<div class="menu-title">Stock</div>
+					</a>
+					<ul>
+						
+						<li> <a href="stores.php"><i class="bx bx-caret-right"></i>View Stock</a>
+						</li>
+						<li> <a href="addstore.php"><i class="bx bx-caret-right"></i>Add Stock</a>
+						</li>
+						
 					</ul>
-				  </li>
-					<?php } ?>
-                </ul>
-              </li>
-				<?php } ?>
-            </ul>
-          </li>
-			
-			
-          <li><a href="index.php"><span>Home</span></a></li>
-		<li><a href="shop.php"><span>Shop</span></a></li>
-			<?php if(isset($_SESSION['SESS-ID'])) {?>
-		  <li><a href="account-wishlist.php"><span>Wishlist&nbsp;<i class="icon-heart" style="margin-top: -3px; color:#0da9ef;"></i>&nbsp;(<?php 
-							   $id= $_SESSION['SESS-ID'];
-							   $query = "SELECT id FROM wishlist where u_id='$id'"; 
+				</li>
+				<li class="menu-label">Orders</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="lni lni-cart" ></i>
+						</div>
+						<div class="menu-title">Orders</div>
+					</a>
+					<ul>
+						<li> <a href="pend_order.php"><i class="bx bxs-bell-ring"></i>New Orders &nbsp; <span class="badge bg-primary"><?php 
+							   
+							   $query = "SELECT id FROM checkout where status='0'"; 
 										$result = mysqli_query($con, $query); 
 										if ($result) { 
 											echo $row = mysqli_num_rows($result); 
 										} 
 							  
-							   ?>)</span></a></li> 
-			
-			<li><a href="checkout.php"><span>Checkout</span></a></li>
-		  <li><a href="order_history.php"><span>Order History</span></a></li>
-			<?php } ?>
-			
-		  <li><a href="contacts.php"><span>Contact Us</span></a></li>
-		  <li><a href="about.php"><span>About Us</span></a></li>	
-			<?php if(isset($_SESSION['SESS-ID'])) 
-         {?>
-		  <li class="active"><a href="logout.php"><span><i class="icon-unlock" style="margin-top: -3px;"></i>&nbsp; Logout</span></a></li>
-			<?php } else {?>
-			<li class="active"><a href="account-login.php"><span><i class="icon-head" style="margin-top: -3px;"></i>&nbsp; Login your account</span></a></li>
-			<?php } ?>
-        </ul>
-      </nav>
-    </div>
-    <!-- Topbar-->
-
-     <div class="topbar">
-		 <?php 
-	                                 $ch = "SELECT * FROM about";
-								   $rr=mysqli_query($con,$ch);
-								   while($row1=mysqli_fetch_array($rr))
-								   {
-									 
-							         ?>	
-      <div class="topbar-column"><a class="hidden-md-down" href="#"><i class="icon-mail"></i>&nbsp; <?php echo $row1['email']; ?></a><a class="hidden-md-down" href="tel:00331697720"><i class="icon-bell"></i>&nbsp; <?php echo $row1['phone']; ?></a><a class="social-button sb-facebook shape-none sb-dark" href="<?php echo $row1['fb']; ?>" target="_blank"><i class="socicon-facebook"></i></a><a class="social-button sb-twitter shape-none sb-dark" href="<?php echo $row1['twitter']; ?>" target="_blank"><i class="socicon-twitter"></i></a><a class="social-button sb-instagram shape-none sb-dark" href="<?php echo $row1['insta']; ?>" target="_blank"><i class="socicon-instagram"></i></a><a class="social-button sb-pinterest shape-none sb-dark" href="<?php echo $row1['pin']; ?>" target="_blank"><i class="socicon-pinterest"></i></a>
-      </div>
-		 <?php } ?>
-      <div class="topbar-column">
-        <div class="lang-currency-switcher-wrap">
-          <div class="lang-currency-switcher dropdown-toggle"><span class="currency">Settings</span></div>
-          <div class="dropdown-menu">
-            <div class="currency-select" style="margin-bottom: -15px;">
-				<script type="text/javascript">
-						function googleTranslateElementInit() {
-						  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-						}
-						</script>
-				 <div class="ps-dropdown language">
-								<div  id="google_translate_element" class="translate" ></div>
-                 </div>
-            </div>
-			  <hr style="margin-bottom: 10px;">
-			  <?php if(isset($_SESSION['SESS-ID'])) 
-{?>
-			  <a class="dropdown-item" href="logout.php"><i class="icon-head" style="margin-top: -4px;"></i>&nbsp;Logout</a>
-	
-<?php } else{?>
-	<a class="dropdown-item" href="account-login.php"><i class="icon-head" style="margin-top: -4px;"></i>&nbsp;Sign In</a><a class="dropdown-item"  href="account-signup.php"><i class="icon-plus" style="margin-top: -4px;"></i>&nbsp;Join Us</a>
-	
-<?php }
-			  ?>
-			  
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Navbar-->
-    <!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page.-->
-     <header class="navbar navbar-sticky">
-      <!-- Search-->
-      <form class="site-search" method="get">
-        <input type="text" name="site_search" placeholder="Type to search...">
-        <div class="search-tools"><span class="clear-search">Clear</span><span class="close-search"><i class="icon-cross"></i></span></div>
-      </form>
-      <div class="site-branding">
-        <div class="inner">
-          <!-- Off-Canvas Toggle (#shop-categories)--><a class="offcanvas-toggle cats-toggle" href="#shop-categories" data-toggle="offcanvas"></a>
-          <!-- Off-Canvas Toggle (#mobile-menu)--><a class="offcanvas-toggle menu-toggle" href="#mobile-menu" data-toggle="offcanvas"></a>
-          <!-- Site Logo--><a class="site-logo" href="index.php"><img src="img/logo/logo.png" alt="Unishop"></a>
-        </div>
-      </div>
-      <!-- Main Navigation-->
-      <nav class="site-menu">
-        <ul>
-          <li class="active"><a href="index.php"><span>Home</span></a></li>
-		  <li><a href="shop.php"><span>Shop</span></a></li>	
-		<?php if(isset($_SESSION['SESS-ID'])) 
-{?>	
-		  <li><a href="account-wishlist.php"><span>Wishlist (<?php	
-                                      $uid=$_SESSION['SESS-ID'];
-                                       $query = "SELECT id FROM wishlist where u_id='$uid'"; 
-										$result = mysqli_query($con, $query); 
-										if ($result) { 
-											echo $row = mysqli_num_rows($result); 
-										} ?>)</span></a></li>
-			<?php } ?>
-		  <li><a href="contacts.php"><span>Contact Us</span></a></li>
-		  <li><a href="about.php"><span>About Us</span></a></li>
-        </ul>
-      </nav>
-      <!-- Toolbar-->
-      <div class="toolbar">
-        <div class="inner">
-          <div class="tools">
-            <div class="search"><i class="icon-search"></i></div>
-			  <?php if(isset($_SESSION['SESS-ID'])) 
-{?>
-               <div class="account"><a href="account-profile.php"></a><i class="icon-head"></i>
-              <ul class="toolbar-dropdown">
-                <li class="sub-menu-user">
-					<?php 
-							            $id= $_SESSION['SESS-ID'];
-									   $qry = "SELECT * FROM login WHERE  u_id='$id'";
-								   $r1=mysqli_query($con,$qry);
-								   while($r=mysqli_fetch_array($r1))
-								   {
-							         ?>	
+							   ?></span></a>
+						</li>
+						<li> <a href="order.php"><i class="bx bxs-box"></i>Order History</a>
+						</li>
 						
-                  <div class="user-ava"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($r['image']); ?>">
-                  </div>
+					</ul>
+				</li>
+				
+				<li class="menu-label">Users & Info</li>
+				<li>
+					<a href="customer.php">
+						<div class="parent-icon"><i class="lni lni-customer"></i>
+						</div>
+						<div class="menu-title">Customers</div>
+					</a>
+				</li>
+				<li>
+					<a href="contactus.php">
+						<div class="parent-icon"><i class='bx bx-message-detail'></i>
+						</div>
+						<div class="menu-title">Contact Us</div>
+					</a>
+				</li>
+				<li class="menu-label">About Store</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="lni lni-users" ></i>
+						</div>
+						<div class="menu-title">Our Team</div>
+					</a>
+					<ul>
+						
+						<li> <a href="team.php"><i class="bx bx-caret-right"></i>View Team</a>
+						</li>
+						<li> <a href="addteam.php"><i class="bx bx-caret-right"></i>Add Member</a>
+						</li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="lni lni-shopify" ></i>
+						</div>
+						<div class="menu-title">Outlet Stores</div>
+					</a>
+					<ul>
+						
+						<li> <a href="stores.php"><i class="bx bx-caret-right"></i>View Stores</a>
+						</li>
+						<li> <a href="addstore.php"><i class="bx bx-caret-right"></i>Add Store</a>
+						</li>
+						
+					</ul>
+				</li>
+				
+				
+				
+				
+			</ul>
+			<!--end navigation-->
+		</div>
+		<!--end sidebar wrapper -->
+		<!--start header -->
+		<header>
+			<div class="topbar d-flex align-items-center bg-dark shadow-none border-light-2 border-bottom">
+				<nav class="navbar navbar-expand">
+					<div class="mobile-toggle-menu text-white me-3"><i class='bx bx-menu'></i>
+					</div>
 					
-                  <div class="user-info">
-                    <h6 class="user-name"><?php echo $r['name'] ?></h6>
-                  </div>
-					<?php } ?>
-                </li>
-                  <li ><a href="account-profile.php"><i class="icon-head"></i>My Profile</a></li>
-                  <li ><a href="account-orders.php"><i class="icon-bag"></i>Orders History</a></li>
-                  <li ><a href="account-wishlist.php"><i class="icon-heart"></i>Wishlist (<?php 
-							   $id= $_SESSION['SESS-ID'];
-							   $query = "SELECT id FROM wishlist where u_id='$id'"; 
+					<div class="search-bar flex-grow-1">
+						<div class="position-relative search-bar-box">
+							<form>
+							  <input type="text" class="form-control search-control" autofocus placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
+							   <span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
+						    </form>
+						</div>
+					</div>
+					<div class="top-menu ms-auto">
+						<ul class="navbar-nav align-items-center">
+							<li class="nav-item mobile-search-icon">
+								<a class="nav-link text-white" href="javascript:;">	<i class='bx bx-search'></i>
+								</a>
+							</li>
+							<li class="nav-item mobile-search-icon">
+								<a class="nav-link text-white" href="app-to-do.php">	<i class='bx bx-check-square'></i>
+								</a>
+							</li>
+							<li class="nav-item dropdown dropdown-large">
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span class="alert-count bg-primary"><?php 
+							   
+							   $query = "SELECT id FROM checkout where status='0'"; 
 										$result = mysqli_query($con, $query); 
 										if ($result) { 
 											echo $row = mysqli_num_rows($result); 
 										} 
 							  
-							   ?>)</a></li>
-                <li class="sub-menu-separator"></li>
-                <li class="active"><a href="logout.php"> <i class="icon-unlock"></i>Logout</a></li>
-              </ul>
-            </div>
-			  
-			   <div class="cart">
-				    <?php 
-					$id= $_SESSION['SESS-ID'];
-	                $ch = "SELECT * FROM cart WHERE u_id='$id' AND status='0'";
-					$rr=mysqli_query($con,$ch);
-					if(mysqli_num_rows($rr)<=0)
-					{?>
-				   <a href="#"></a><i class="icon-bag"></i><span class="count">Empty</span>
-				   <?php } else{ ?>
-				    <a href="cart.php"></a><i class="icon-bag"></i>
-				   <span class="count">
-				              <?php 
-							   $id= $_SESSION['SESS-ID'];
-							   $query = "SELECT id FROM cart where u_id='$id' AND status='0'"; 
-										$result = mysqli_query($con, $query); 
-										if ($result) { 
-											echo $row = mysqli_num_rows($result); 
-										} 
-							  
-							   ?>
-				   
-				   </span>
-				   <span class="subtotal"><b>$</b> <?php 
-										$id= $_SESSION['SESS-ID'];
-										$sum="SELECT sum(g_total) as g_tot FROM cart WHERE status = '0' AND u_id='$id'";
-										$sumr=mysqli_query($con,$sum);
-										while($s=mysqli_fetch_array($sumr))
-										{
-					                        echo $s['g_tot'];
-										} ?>
-				   
-				          </span>
-              <div class="toolbar-dropdown">
-				   <?php  
-							            $id= $_SESSION['SESS-ID'];
-	                                 $ch = "SELECT * FROM cart WHERE status = '0' AND u_id='$id'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
-									   $pid=$row['p_id'] ;
-									   $qry = "SELECT * FROM product WHERE  p_id='$pid'";
-								   $r1=mysqli_query($con,$qry);
-								   while($r=mysqli_fetch_array($r1))
-								   {
-							         ?>
-                <div class="dropdown-product-item"><a class="dropdown-product-remove" onClick="return confirm('Do you want to remove this item from cart?')" href="index.php?delete=<?php echo $row['id']; ?>"><i class="icon-cross"></i></a><a class="dropdown-product-thumb" href="product.php?id=<?php echo $r['p_id'] ?>"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($r['image']); ?>" alt="Product"></a>
-                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="product.php?id=<?php echo $r['p_id'] ?>"><?php echo $r['p_name'] ?></a><span class="dropdown-product-details"><?php echo $row['p_qty'] ?> x $<?php echo $row['p_price'] ?></span></div>
-                </div>
-				  <?php
-									if(isset($_GET['delete']))
-									{
-										$pid=$row['p_id'];
-										$qty=$row['p_qty'];
-										$pro=$r['quantity'];
-										$rr=$qty+$pro;
-										$q = "UPDATE product SET quantity = '$rr' WHERE  p_id ='$pid'";
-					                    mysqli_query($con,$q);
-										$d=$_GET['delete'];
-										$delete="DELETE FROM cart where id='$d'";
-										mysqli_query($con,$delete);
-										echo "<script>window.location.replace('index.php')</script>";
-									}
-									
-									?>
-             <?php } } ?>
-				  
-				  
-                <div class="toolbar-dropdown-group">
-                  <div class="column"><span class="text-lg">Total:</span></div>
-                  <div class="column text-right"><span class="text-lg text-medium">
-					  <b>$</b> <?php 
-										$id= $_SESSION['SESS-ID'];
-										$sum="SELECT sum(g_total) as g_tot FROM cart WHERE status = '0' AND u_id='$id'";
-										$sumr=mysqli_query($con,$sum);
-										while($s=mysqli_fetch_array($sumr))
-										{
-					                        echo $s['g_tot'];
-										} ?>
-					  &nbsp;</span></div>
-                </div>
-                <div class="toolbar-dropdown-group">
-                  <div class="column"><a class="btn btn-sm btn-block btn-secondary" href="cart.php">View Cart</a></div>
-                  <div class="column"><a class="btn btn-sm btn-block btn-primary" href="checkout.php">Checkout</a></div>
-                </div>
-				  
-              </div>
-				   <?php } ?>
-            </div>
-			  
-			  
-			  <?php }
-			  else{?>
-				  <div class="account" style="margin-right: 30px;"><a href="#"></a><i class="icon-head"></i>
-              <ul class="toolbar-dropdown" style="width: 150px;">
-                  <li><a href="account-login.php">LogIn</a></li>
-                <li class="sub-menu-separator"></li>
-                  <li><a href="account-signup.php">Join Us</a></li>
-              </ul>
-            </div>
-			 <?php }
-			  ?>
-			 
-          </div>
-        </div>
-      </div>
-    </header>
-
-
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<style>
-
-.goog-te-banner-frame{
-display:none !important
-}
-.goog-logo-link {
-   display:none !important;
-} 
-
-.goog-te-gadget{
-   color: transparent !important;
-}
-	.translate select {
-        max-width:150px !important; 
-		height: 40px;
-		background-color:#f5f5f5;
-		padding: 10px;
-		border: none;
-		color:#606975;
-		border-radius: 5px;
-        }
-</style> 
+							   ?></span>
+									<i class='bx bx-bell'></i>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end">
+									<a href="javascript:;">
+										<div class="msg-header">
+											<p class="msg-header-title">New Orders</p>
+										</div>
+									</a>
+									<div class="header-notifications-list">
+									<?php
+                $checkout="SELECT * FROM checkout WHERE status='0'";
+                $qry=mysqli_query($con,$checkout);
+                while ($qryr=mysqli_fetch_array($qry)) {
+                  # code...
+                ?>	
+										<a class="dropdown-item" href="order_details.php?detailsid=<?php echo $qryr['id']; ?>">
+											<div class="d-flex align-items-center">
+												<div class="notify bg-light-primary text-primary"><i class="bx bx-cart-alt"></i>
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name"><?php echo $qryr['f_name']." ".$qryr['l_name']; ?> <span class="msg-time float-end"><?php echo $qryr['date']; ?></span></h6>
+													<p class="msg-time"><?php echo $qryr['email']; ?></p>
+												</div>
+											</div>
+										</a>
+								<?php } ?>		
+									</div>
+									<a href="pend_order.php">
+										<div class="text-center msg-footer">View All Order</div>
+									</a>
+								</div>
+							</li>
+							<li class="nav-item dropdown dropdown-large">
+								<div class="dropdown-menu dropdown-menu-end">
+									<a href="javascript:;">
+										<div class="msg-header">
+											<p class="msg-header-title">Messages</p>
+											<p class="msg-header-clear ms-auto">Marks all as read</p>
+										</div>
+									</a>
+									<div class="header-message-list">
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-1.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Daisy Anderson <span class="msg-time float-end">5 sec
+												ago</span></h6>
+													<p class="msg-info">The standard chunk of lorem</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-2.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Althea Cabardo <span class="msg-time float-end">14
+												sec ago</span></h6>
+													<p class="msg-info">Many desktop publishing packages</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-3.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Oscar Garner <span class="msg-time float-end">8 min
+												ago</span></h6>
+													<p class="msg-info">Various versions have evolved over</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-4.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Katherine Pechon <span class="msg-time float-end">15
+												min ago</span></h6>
+													<p class="msg-info">Making this the first true generator</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-5.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Amelia Doe <span class="msg-time float-end">22 min
+												ago</span></h6>
+													<p class="msg-info">Duis aute irure dolor in reprehenderit</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-6.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Cristina Jhons <span class="msg-time float-end">2 hrs
+												ago</span></h6>
+													<p class="msg-info">The passage is attributed to an unknown</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-7.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">James Caviness <span class="msg-time float-end">4 hrs
+												ago</span></h6>
+													<p class="msg-info">The point of using Lorem</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-8.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Peter Costanzo <span class="msg-time float-end">6 hrs
+												ago</span></h6>
+													<p class="msg-info">It was popularised in the 1960s</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-9.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">David Buckley <span class="msg-time float-end">2 hrs
+												ago</span></h6>
+													<p class="msg-info">Various versions have evolved over</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-10.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Thomas Wheeler <span class="msg-time float-end">2 days
+												ago</span></h6>
+													<p class="msg-info">If you are going to use a passage</p>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="javascript:;">
+											<div class="d-flex align-items-center">
+												<div class="user-online">
+													<img src="assets/images/avatars/avatar-11.png" class="msg-avatar" alt="user avatar">
+												</div>
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Johnny Seitz <span class="msg-time float-end">5 days
+												ago</span></h6>
+													<p class="msg-info">All the Lorem Ipsum generators</p>
+												</div>
+											</div>
+										</a>
+									</div>
+									<a href="javascript:;">
+										<div class="text-center msg-footer">View All Messages</div>
+									</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+					
+					
+					
+					<div class="user-box dropdown border-light-2">
+						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<img src="assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
+							<div class="user-info ps-3">
+								<p class="user-name mb-0 text-white">Pauline Seitz</p>
+								<p class="designattion mb-0">Web Designer</p>
+							</div>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li><a class="dropdown-item" href="javascript:;"><i class="bx bx-user"></i><span>Profile</span></a>
+							</li>
+							<li><a class="dropdown-item" href="javascript:;"><i class="bx bx-cog"></i><span>Settings</span></a>
+							</li>
+							<li><a class="dropdown-item" href="javascript:;"><i class='bx bx-home-circle'></i><span>Dashboard</span></a>
+							</li>
+							<li><a class="dropdown-item" href="javascript:;"><i class='bx bx-dollar-circle'></i><span>Earnings</span></a>
+							</li>
+							<li><a class="dropdown-item" href="javascript:;"><i class='bx bx-download'></i><span>Downloads</span></a>
+							</li>
+							<li>
+								<div class="dropdown-divider mb-0"></div>
+							</li>
+							<li><a class="dropdown-item" href="javascript:;"><i class='bx bx-log-out-circle'></i><span>Logout</span></a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--end header -->

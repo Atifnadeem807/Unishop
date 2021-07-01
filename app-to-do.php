@@ -11,7 +11,6 @@
 	<link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
 	<link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
 	<link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
-	<link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 	<!-- loader-->
 	<link href="assets/css/pace.min.css" rel="stylesheet" />
 	<script src="assets/js/pace.min.js"></script>
@@ -30,20 +29,19 @@
 <body>
 	<!--wrapper-->
 	<div class="wrapper">
-		
 		<?php include('header.php'); ?>
 		<!--start page wrapper -->
 		<div class="page-wrapper">
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Running Products </div>
+					<div class="breadcrumb-title pe-3">Applications</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Product Details</li>
+								<li class="breadcrumb-item active" aria-current="page">To Do List</li>
 							</ol>
 						</nav>
 					</div>
@@ -61,86 +59,25 @@
 					</div>
 				</div>
 				<!--end breadcrumb-->
-				<hr/>
-			<!--end row-->
 				<div class="card">
 					<div class="card-body">
-						<div class="table-responsive">
-							<table id="example2" class="table table table-bordered table-striped  table-hover" style="width:100%">
-					    		 <thead  class="bg-primary text-white">
-									<tr>
-											   <th>Actions</th>
-											   <th>No.</th>
-											   <th>Product Name</th>
-										       <th>Brand</th>
-											   <th>Price</th>
-										       <th>Sale Price</th>
-										       <th>SKU</th>
-										       <th>Sold By</th>
-										   </tr>
-								</thead>
-								 <tbody>
-									 <?php
-                        $q="SELECT * FROM product";
-                        $r=mysqli_query($con,$q);
-                        while($p=mysqli_fetch_array($r)){
-                        ?> 
-										   <tr>
-											   <td align="center">
-												   <div class="col">
-														<div class="btn-group" role="group" aria-label="Basic example">
-															<a href="upproduct.php?id=<?php echo $p['p_id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
-															</a>
-
-															<a onClick="return confirm('Do you want to remove this product?')" href="product.php?delete=<?php echo $p['p_id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
-															</a>
-														</div>
-													</div>
-											   </td>
-											   <td>#<?php echo $p['p_id']; ?></td>
-											   <td>
-												<div class="d-flex align-items-center">
-													<div class="recent-product-img">
-														<img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($p['image']); ?>" alt="">
-													</div>
-													<div class="ms-2">
-														<h6 class="mb-1 font-14"><?php echo $p['p_name']; ?></h6>
-													</div>
-												</div>
-											   </td>
-											   <td><?php $b= $p['brand_id']; 
-												   $q1="SELECT * FROM brand where brand_id='$b'";
-													$r1=mysqli_query($con,$q1);
-													$p1=mysqli_fetch_array($r1);
-							                         echo $p1['name'];
-												   
-												   ?></td>
-											   <td>$<?php echo $p['price']; ?></td>
-											   <td>$<?php echo $p['sale_price']; ?></td>
-											   
-											   <td><?php echo $p['SKU']; ?></td>
-											   <td><?php echo $p['sold_by']; ?></td>
-											  
-										   </tr>
-										<?php } ?>
-									   </tbody>
-								
-									<?php
-									if(isset($_GET['delete']))
-									{
-										$d=$_GET['delete'];
-										$delete="DELETE FROM product where p_id='$d'";
-										mysqli_query($con,$delete);
-										echo "<script>window.location.replace('product.php')</script>";
-									}
-									
-									?>
-							</table>
-							
+						<h4 class="mb-0">To Do List</h4>
+						<hr/>
+						<div class="row gy-3">
+							<div class="col-md-10">
+								<input id="todo-input" type="text" class="form-control" value="">
+							</div>
+							<div class="col-md-2 text-end d-grid">
+								<button type="button" onclick="CreateTodo();" class="btn btn-primary">Add todo</button>
+							</div>
+						</div>
+						<div class="form-row mt-3">
+							<div class="col-12">
+								<div id="todo-container"></div>
+							</div>
 						</div>
 					</div>
 				</div>
-				
 			</div>
 		</div>
 		<!--end page wrapper -->
@@ -257,26 +194,100 @@
 	<script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
 	<script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-	<script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
-	<script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
-	<script>
-		$(document).ready(function() {
-			$('#example').DataTable();
-		  } );
-	</script>
-	<script>
-		$(document).ready(function() {
-			var table = $('#example2').DataTable( {
-				lengthChange: false,
-				buttons: [ 'copy', 'excel', 'pdf', 'print']
-			} );
-		 
-			table.buttons().container()
-				.appendTo( '#example2_wrapper .col-md-6:eq(0)' );
-		} );
-	</script>
 	<!--app JS-->
 	<script src="assets/js/app.js"></script>
+	<script>
+		// to do list 
+		 var todos = [{
+			text: "take out the trash",
+			done: false,
+			id: 0
+		}];
+		var currentTodo = {
+			text: "",
+			done: false,
+			id: 0
+		}
+		document.getElementById("todo-input").oninput = function (e) {
+			currentTodo.text = e.target.value;
+		};
+		/*
+			//jQuery Version
+			$('#todo-input').on('input',function(e){
+				currentTodo.text = e.target.value;
+			   });
+			*/
+		function DrawTodo(todo) {
+			var newTodoHTML = `
+			<div class="pb-3 todo-item" todo-id="${todo.id}">
+				<div class="input-group">
+					
+						<div class="input-group-text">
+							<input type="checkbox" onchange="TodoChecked(${todo.id})" aria-label="Checkbox for following text input" ${todo.done&& "checked"}>
+						</div>
+					
+					<input type="text" readonly class="form-control ${todo.done&&" todo-done "} " aria-label="Text input with checkbox" value="${todo.text}">
+					
+						<button todo-id="${todo.id}" class="btn btn-outline-secondary bg-danger text-white" type="button" onclick="DeleteTodo(this);" id="button-addon2 ">X</button>
+					
+				</div>
+			</div>
+			  `;
+			var dummy = document.createElement("DIV");
+			dummy.innerHTML = newTodoHTML;
+			document.getElementById("todo-container").appendChild(dummy.children[0]);
+			/*
+				//jQuery version
+				 var newTodo = $.parseHTML(newTodoHTML);
+				 $("#todo-container").append(newTodo);
+				*/
+		}
+
+		function RenderAllTodos() {
+			var container = document.getElementById("todo-container");
+			while (container.firstChild) {
+				container.removeChild(container.firstChild);
+			}
+			/*
+				//jQuery version
+				  $("todo-container").empty();
+				*/
+			for (var i = 0; i < todos.length; i++) {
+				DrawTodo(todos[i]);
+			}
+		}
+		RenderAllTodos();
+
+		function DeleteTodo(button) {
+			var deleteID = parseInt(button.getAttribute("todo-id"));
+			/*
+				//jQuery version
+				  var deleteID = parseInt($(button).attr("todo-id"));
+				*/
+			for (let i = 0; i < todos.length; i++) {
+				if (todos[i].id === deleteID) {
+					todos.splice(i, 1);
+					RenderAllTodos();
+					break;
+				}
+			}
+		}
+
+		function TodoChecked(id) {
+			todos[id].done = !todos[id].done;
+			RenderAllTodos();
+		}
+
+		function CreateTodo() {
+			newtodo = {
+				text: currentTodo.text,
+				done: false,
+				id: todos.length
+			}
+			todos.push(newtodo);
+			RenderAllTodos();
+		}
+	</script>
 </body>
 
 </html>

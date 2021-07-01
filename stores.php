@@ -37,26 +37,20 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Running Products </div>
+					<div class="breadcrumb-title pe-3">Outlet Stores</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
-								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Product Details</li>
+								<li class="breadcrumb-item active" aria-current="page">Store Details</li>
 							</ol>
 						</nav>
 					</div>
 					<div class="ms-auto">
 						<div class="btn-group">
-							<button type="button" class="btn btn-primary">Settings</button>
-							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
-							</button>
-							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
-								<a class="dropdown-item" href="javascript:;">Another action</a>
-								<a class="dropdown-item" href="javascript:;">Something else here</a>
-								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
-							</div>
+							<a href="addstore.php" class="btn btn-primary"><i class="lni lni-plus"></i>Add new</a>
+							
 						</div>
 					</div>
 				</div>
@@ -69,58 +63,53 @@
 							<table id="example2" class="table table table-bordered table-striped  table-hover" style="width:100%">
 					    		 <thead  class="bg-primary text-white">
 									<tr>
-											   <th>Actions</th>
-											   <th>No.</th>
-											   <th>Product Name</th>
-										       <th>Brand</th>
-											   <th>Price</th>
-										       <th>Sale Price</th>
-										       <th>SKU</th>
-										       <th>Sold By</th>
+											   <th></th>
+											   <th>Name</th>
+										       <th>Address</th>
+											   <th>City</th>
+										       <th>State</th>
+										       <th>Country</th>
+										       <th>Phone</th>
+										       <th>Email</th>
+											   
 										   </tr>
 								</thead>
 								 <tbody>
 									 <?php
-                        $q="SELECT * FROM product";
+                        $q="SELECT * FROM stores";
                         $r=mysqli_query($con,$q);
                         while($p=mysqli_fetch_array($r)){
                         ?> 
 										   <tr>
+											 
 											   <td align="center">
+												   
 												   <div class="col">
 														<div class="btn-group" role="group" aria-label="Basic example">
-															<a href="upproduct.php?id=<?php echo $p['p_id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
+															<a href="upstore.php?id=<?php echo $p['id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
 															</a>
 
-															<a onClick="return confirm('Do you want to remove this product?')" href="product.php?delete=<?php echo $p['p_id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
+															<a onClick="return confirm('Do you want to remove this store?')" href="stores.php?delete=<?php echo $p['id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
 															</a>
 														</div>
 													</div>
 											   </td>
-											   <td>#<?php echo $p['p_id']; ?></td>
 											   <td>
 												<div class="d-flex align-items-center">
-													<div class="recent-product-img">
+													<div class="product-img">
 														<img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($p['image']); ?>" alt="">
-													</div>
-													<div class="ms-2">
-														<h6 class="mb-1 font-14"><?php echo $p['p_name']; ?></h6>
 													</div>
 												</div>
 											   </td>
-											   <td><?php $b= $p['brand_id']; 
-												   $q1="SELECT * FROM brand where brand_id='$b'";
-													$r1=mysqli_query($con,$q1);
-													$p1=mysqli_fetch_array($r1);
-							                         echo $p1['name'];
-												   
-												   ?></td>
-											   <td>$<?php echo $p['price']; ?></td>
-											   <td>$<?php echo $p['sale_price']; ?></td>
+											   <td><?php echo $p['address']; ?></td>
+											   <td><?php echo $p['city']; ?></td>
 											   
-											   <td><?php echo $p['SKU']; ?></td>
-											   <td><?php echo $p['sold_by']; ?></td>
+											   <td><?php echo $p['state']; ?></td>
+											   <td><?php echo $p['country']; ?></td>
+											   <td><?php echo $p['phone']; ?></td>
+											   <td><?php echo $p['email']; ?></td>
 											  
+											   
 										   </tr>
 										<?php } ?>
 									   </tbody>
@@ -129,9 +118,9 @@
 									if(isset($_GET['delete']))
 									{
 										$d=$_GET['delete'];
-										$delete="DELETE FROM product where p_id='$d'";
+										$delete="DELETE FROM stores where id='$d'";
 										mysqli_query($con,$delete);
-										echo "<script>window.location.replace('product.php')</script>";
+										echo "<script>window.location.replace('stores.php')</script>";
 									}
 									
 									?>

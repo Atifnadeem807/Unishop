@@ -37,13 +37,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Running Products </div>
+					<div class="breadcrumb-title pe-3">Menu </div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Product Details</li>
+								<li class="breadcrumb-item active" aria-current="page">Sub-Category Details</li>
 							</ol>
 						</nav>
 					</div>
@@ -62,76 +62,82 @@
 				</div>
 				<!--end breadcrumb-->
 				<hr/>
-			<!--end row-->
+				<div class="col" align="right" style="padding: 20px;">
+						<a href="addsubcat.php" class="btn btn-primary px-5"><i class="lni lni-plus"></i></a>
+				</div>
 				<div class="card">
 					<div class="card-body">
 						<div class="table-responsive">
-							<table id="example2" class="table table table-bordered table-striped  table-hover" style="width:100%">
-					    		 <thead  class="bg-primary text-white">
+							<table id="example2" class="table table-bordered table-striped table-hover" style="width:100%">
+								<thead  class="bg-primary text-white">
 									<tr>
-											   <th>Actions</th>
-											   <th>No.</th>
-											   <th>Product Name</th>
-										       <th>Brand</th>
-											   <th>Price</th>
-										       <th>Sale Price</th>
-										       <th>SKU</th>
-										       <th>Sold By</th>
-										   </tr>
+										<th>#No.</th>
+										<th>Menu Name</th>
+										<th>Category</th>
+										<th>Sub-Category</th>
+										<th>Status</th>
+										<th>Action</th>
+									</tr>
 								</thead>
-								 <tbody>
-									 <?php
-                        $q="SELECT * FROM product";
-                        $r=mysqli_query($con,$q);
-                        while($p=mysqli_fetch_array($r)){
-                        ?> 
-										   <tr>
-											   <td align="center">
-												   <div class="col">
-														<div class="btn-group" role="group" aria-label="Basic example">
-															<a href="upproduct.php?id=<?php echo $p['p_id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
-															</a>
-
-															<a onClick="return confirm('Do you want to remove this product?')" href="product.php?delete=<?php echo $p['p_id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
-															</a>
-														</div>
-													</div>
-											   </td>
-											   <td>#<?php echo $p['p_id']; ?></td>
-											   <td>
-												<div class="d-flex align-items-center">
-													<div class="recent-product-img">
-														<img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($p['image']); ?>" alt="">
-													</div>
-													<div class="ms-2">
-														<h6 class="mb-1 font-14"><?php echo $p['p_name']; ?></h6>
-													</div>
-												</div>
-											   </td>
-											   <td><?php $b= $p['brand_id']; 
-												   $q1="SELECT * FROM brand where brand_id='$b'";
-													$r1=mysqli_query($con,$q1);
-													$p1=mysqli_fetch_array($r1);
-							                         echo $p1['name'];
-												   
-												   ?></td>
-											   <td>$<?php echo $p['price']; ?></td>
-											   <td>$<?php echo $p['sale_price']; ?></td>
-											   
-											   <td><?php echo $p['SKU']; ?></td>
-											   <td><?php echo $p['sold_by']; ?></td>
-											  
-										   </tr>
-										<?php } ?>
-									   </tbody>
 								
+								<tbody>
+									<?php
+                        $q="SELECT * FROM category ORDER BY sort ASC";
+                        $r=mysqli_query($con,$q);
+                        while($sub=mysqli_fetch_array($r)){
+                        ?> 
+									<tr>
+										<?php 
+							               $cat= $sub['sub_id'];     
+							               $qry="SELECT * FROM sub_cat where sub_id='$cat'";
+										   $rr=mysqli_query($con,$qry);
+										   while($row=mysqli_fetch_array($rr)){
+											   $a= $row['name'];
+											   $b= $row['main_id'];
+										   }   
+							               $qry1="SELECT * FROM main_cat where main_id='$b'";
+										   $rr1=mysqli_query($con,$qry1);
+										   while($row1=mysqli_fetch_array($rr1)){
+											   $c= $row1['name']; 
+										   }
+							
+							             ?>
+										<td><?php echo $sub['cat_id']; ?></td>
+										<td><?php echo $c; ?></td>
+										<td><?php echo $a; ?></td>
+										<td><?php echo $sub['name']; ?></td>
+										<td><?php 
+							                    $status= $sub['status'];
+							                   if($status==1)
+											   {?>
+												   <span class="badge bg-success">Active</span>
+											  <?php } else {?>
+											       <span class="badge bg-danger">Disactive</span>
+											 <?php } ?>
+											</td>
+										
+										<td align="center">
+												   
+												   <div class="col">
+										<div class="btn-group" role="group" aria-label="Basic example">
+											<a href="updsubcat.php?id=<?php echo $sub['cat_id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
+											</a>
+											
+											<a onClick="return confirm('Do you want to remove this Category?')" href="subcat.php?delete=<?php echo $sub['cat_id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
+											</a>
+										</div>
+									</div>
+											   </td>
+									</tr>
+						<?php } ?>
+								</tbody>
 									<?php
 									if(isset($_GET['delete']))
 									{
 										$d=$_GET['delete'];
-										$delete="DELETE FROM product where p_id='$d'";
+										$delete="DELETE FROM category where cat_id='$d'";
 										mysqli_query($con,$delete);
-										echo "<script>window.location.replace('product.php')</script>";
+										echo "<script>window.location.replace('subcat.php')</script>";
 									}
 									
 									?>
@@ -140,7 +146,7 @@
 						</div>
 					</div>
 				</div>
-				
+			
 			</div>
 		</div>
 		<!--end page wrapper -->

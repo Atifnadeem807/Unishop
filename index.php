@@ -1,699 +1,906 @@
-<?php session_start(); ?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <title>Unishop
-    </title>
-    <meta name="description" content="Unishop - Universal E-Commerce Template">
-    <meta name="keywords" content="shop, e-commerce, modern, flat style, responsive, online store, business, mobile, blog, bootstrap 4, html5, css3, jquery, js, gallery, slider, touch, creative, clean">
-    <meta name="author" content="Rokaux">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Favicon and Apple Icons-->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="touch-icon-iphone.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png">
-    <link rel="stylesheet" media="screen" href="css/vendor.min.css">
-    <link id="mainStyles" rel="stylesheet" media="screen" href="css/styles.min.css">
-    <link rel="stylesheet" media="screen" href="customizer/customizer.min.css">
-   
-    <!-- Modernizr-->
-    <script src="js/modernizr.min.js"></script>
-  </head>
-  <body>
-    <?php include('header.php') ?>
-    <div class="offcanvas-wrapper">
-      <!-- Page Content-->
-      <!-- Main Slider-->
-      <section class="hero-slider" style="background-image: url(img/hero-slider/main-bg.jpg);">
-        <div class="owl-carousel large-controls dots-inside" data-owl-carousel="{ &quot;nav&quot;: true, &quot;dots&quot;: true, &quot;loop&quot;: true, &quot;autoplay&quot;: true, &quot;autoplayTimeout&quot;: 7000 }">
-			
-			<?php 
-							         
-	                                 $ch = "SELECT * FROM slider WHERE status = '1'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
-									   $pid=$row['p_id'] ;
-									   $qry = "SELECT * FROM product WHERE  p_id='$pid'";
-								   $r1=mysqli_query($con,$qry);
-								   while($r=mysqli_fetch_array($r1))
-								   {
-							         ?>	
-          <div class="item">
-            <div class="container padding-top-3x">
-              <div class="row justify-content-center align-items-center">
-                <div class="col-lg-7 col-md-7 text-md-left text-center">
-                  <div class="from-bottom">
-                    <div class="h1 text-body text-normal mb-2 pt-1"><?php echo $r['p_name'] ?></div>
-                    <div class="h2 text-body text-normal mb-4 pb-1">Starting at <span class="text-bold">$<?php echo $r['price'] ?></span></div>
-                  </div><a class="btn btn-primary scale-up delay-1" href="product.php?id=<?php echo $r['p_id'] ?>">Buy Now</a>
-                </div>
-                <div class="col-md-5 padding-bottom-2x"><img style="max-height: 80%;" class="d-block" src="<?php echo 'data:image/png;base64,'. base64_encode($row['image']); ?>" alt="<?php echo $r['p_name'] ?>"></div>
-              </div>
-            </div>
-          </div>
-			
-			<?php } } ?>
-         
-        </div>
-      </section>
-	  <!-- Featured Products Carousel-->
-      <section class="container padding-top-3x padding-bottom-3x">
-        <h3 class="text-center mb-30">Popular Products</h3>
-        <div class="owl-carousel" data-owl-carousel="{ &quot;nav&quot;: false, &quot;dots&quot;: true, &quot;margin&quot;: 30, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;576&quot;:{&quot;items&quot;:2},&quot;768&quot;:{&quot;items&quot;:3},&quot;991&quot;:{&quot;items&quot;:4},&quot;1200&quot;:{&quot;items&quot;:4}} }">
-          <!-- Product-->
-			<?php 
-								   $ch = "SELECT * FROM product WHERE status = '1' AND review > '10'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--favicon-->
+	<link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+	<!--plugins-->
+	<link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+	<link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+	<link href="assets/plugins/highcharts/css/highcharts.css" rel="stylesheet" />
+	<link href="assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+	<link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+	<!-- loader-->
+	<link href="assets/css/pace.min.css" rel="stylesheet" />
+	<script src="assets/js/pace.min.js"></script>
+	<!-- Bootstrap CSS -->
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+	<link href="assets/css/app.css" rel="stylesheet">
+	<link href="assets/css/icons.css" rel="stylesheet">
+	<!-- Theme Style CSS -->
+	<link rel="stylesheet" href="assets/css/dark-theme.css" />
+	<link rel="stylesheet" href="assets/css/semi-dark.css" />
+	<link rel="stylesheet" href="assets/css/header-colors.css" />
+	<title>Synadmin – Bootstrap5 Admin Template</title>
+</head>
 
-								   ?>
-			<form method="post">
-           <div class="grid-item">
-            <div class="product-card">
-                <div class="rating-stars">
-					<?php
-									   $pid=$row['p_id'];
-									$rreview="SELECT sum(review) as u_rate, count(id) as countt FROM reviews WHERE p_id='$pid'";
-									$rrew=mysqli_query($con, $rreview);
-									while($r2=mysqli_fetch_array($rrew))
-									{?>
-										
-										<?php
-									if($r2['u_rate']>-1 || $r2['countt']>0)
-									 {
-										$main=($r2['u_rate']/$r2['countt']);
-										 
-									 }
-										else
-										{
-											$main=0;
-										}
-										
-										for($i=1; $i<6; $i++)
-										{
-											if(($i-1<$main)&&($i>$main))
-											{
-												?>
-				                        	<i class="icon-star"></i>
-										<?php
-												
-											}
-											else if($i<$main)
-											{
-												?>
-					                             <i class="icon-star filled"></i>
-										<?php
-												
-											}
-											else{ 
-												?>
-												<i class="icon-star"></i>
-                                            <?php      
-											
-											}
-										}
-							     ?>
-									<?php }   ?>
-					
-                </div><a class="product-thumb" href="product.php?id=<?php echo $row['p_id'] ?>"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($row['image']); ?>" alt="Product"></a>
-              <h3 class="product-title"><a href="product.php?id=<?php echo $row['p_id'] ?>"><?php echo $row['p_name'] ?></a></h3>
-              <h4 class="product-price">
-                <del>$<?php echo $row['price'] ?></del>$<?php echo $row['sale_price'] ?>
-              </h4>
-              <div class="product-buttons">
-				  <?php
-					if(isset($_SESSION['SESS-ID']))
-					{?>
-                <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist" name="wishlist2<?php echo $row['p_id'] ?>"><i class="icon-heart"></i></button>
-				  <?php $qty0=$row['quantity']; 
-				  if($qty0 <= 0)
-				  {?>
-					<button class="btn btn-outline-secondary btn-sm">Not Available</button> 
-				  <?php } else {?>
-					   <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!" name="cart2<?php echo $row['p_id'] ?>">Add to Cart</button> 
-				 <?php } ?>
-                
-				  
-				  
-				  <?php } else {?>
-					
-				  <a class="btn btn-outline-secondary btn-sm btn-wishlist" title="Login for Whishlist" href="account-login.php"><i class="icon-heart"></i></a>
-                <a class="btn btn-outline-primary btn-sm" title="Login for Cart"  href="account-login.php">Add to Cart</a>
-						
-					<?php } ?>
-              </div>
-            </div>
-          </div>
-			</form>	
-		                    	<?php 
-	                                  $pid=$row['p_id'];
-									   $qty=$row['quantity'];
-									  if(isset($_REQUEST['cart2'.$pid]))
-									   {
-										       $uid=$_SESSION['SESS-ID'];
-											   $o_id=0;
-										       if($row['sale_price']<=0)
-											   {
-												  $p_price=$row['price']; 
-												   
-											   }
-										       else
-											   {
-												  $p_price=$row['sale_price']; 
-												   
-											   }
-										      
-											   $qry1 = "SELECT * FROM cart WHERE u_id = '$uid' AND p_id = '$pid' AND status='0'";
-												$r1=mysqli_query($con,$qry1);
-												$row1 = mysqli_fetch_assoc($r1);
-												if((mysqli_num_rows($r1))>0)
-												{
-													$up="SELECT * FROM cart WHERE p_id='$pid' AND u_id='$uid'";
-													$u=mysqli_query($con, $up);
-													while($r3=mysqli_fetch_array($u))
-													{ 
-													  
-													 $qnty=$r3['p_qty']+1;
-													$p_total=$p_price*$qnty;
-													$p_tax=0;
-													$p_ship=0;
-													$g_total=$p_ship+$p_total+$p_tax;
-                                                     $qrr = "UPDATE cart SET p_qty = '$qnty', p_total='$p_total', g_total='$g_total' WHERE  u_id = '$uid' AND p_id = '$pid'";
-										         	mysqli_query($con,$qrr);
-													 
-													} 
-													
-												}
-												else
-												{
-												       $p_qty=1;
-													   $p_total=$p_price*$p_qty;
-													   $p_tax=0;
-													   $p_ship=0;
-													   $g_total=$p_ship+$p_total+$p_tax; 
-													   $status=0; 
-													$qr= "INSERT INTO cart (id, u_id, order_id, p_id, p_price, p_qty, p_total, p_tax, p_ship, g_total, status) VALUES ( NULL, '$uid', '$o_id', '$pid', '$p_price', '$p_qty', '$p_total', '$p_tax', '$p_ship', '$g_total', '$status')";
-									           		mysqli_query($con,$qr);
-												}
-										    $qty--;
-										  	$qry5 = "UPDATE product SET quantity = '$qty' WHERE  p_id ='$pid'";
-					                     	mysqli_query($con,$qry5);
-										  echo "<script> window.location.replace('index.php')</script>";
-									   }
-									  
-									   ?>
-		 						
-								<?php
-									   
-										$pid=$row['p_id'];
-									   if(isset($_REQUEST['wishlist2'.$pid]))
-													   {
-										$uid=$_SESSION['SESS-ID'];
-										$qry1 = "SELECT * FROM wishlist WHERE u_id = '$uid' AND p_id = '$pid'";
-												$r1=mysqli_query($con,$qry1);
-												$row1 = mysqli_fetch_assoc($r1);
-												if((mysqli_num_rows($r1))>0)
-												{
-												 
-												}
-										        else
-												{
-													$q= "INSERT INTO wishlist (id, p_id,u_id) VALUES ( NULL, '$pid', '$uid')";
-																mysqli_query($con,$q);
-																echo "<script> window.location.replace('index.php')</script>";
-												}
-																
-													   }
-										
-								?>
-			<?php } ?>
-        </div>
-      </section>
-	  <!-- Product Widgets-->
-      <section class="container padding-bottom-2x" style="padding-top: 50px;">
-        <div class="row">
-          <div class="col-md-4 col-sm-6">
-            <div class="widget widget-featured-products">
-              <h3 class="widget-title">Top Sellers</h3>
-              <!-- Entry-->
-			<?php 
-								   $ch1 = "SELECT * FROM offers WHERE status = '1' AND offer = 'Best Sellers'";
-								   $rr1=mysqli_query($con,$ch1);
-								   while($row1=mysqli_fetch_array($rr1))
-								   {
-									   $pid=$row1['p_id'];
-                                   $ch = "SELECT * FROM product WHERE status = '1' AND p_id = '$pid'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
+<body>
+	<!--wrapper-->
+	<div class="wrapper">
+		<?php include('header.php'); ?>
+		<!--start page wrapper -->
+		<div class="page-wrapper">
+			<div class="page-content">
+			
+			  <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
+			    <div class="col">
+						<div class="card radius-10 overflow-hidden">
+							<div class="card-body">
+								<div class="d-flex align-items-center">
+									<div>
+										<p class="mb-0">Total Orders</p>
+										<h5 class="mb-0">867</h5>
+									</div>
+									<div class="ms-auto">	<i class='bx bx-cart font-30'></i>
+									</div>
+								</div>
+							</div>
+							<div class="" id="chart1"></div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card radius-10 overflow-hidden">
+							<div class="card-body">
+								<div class="d-flex align-items-center">
+									<div>
+										<p class="mb-0">Total Income</p>
+										<h5 class="mb-0">$52,945</h5>
+									</div>
+									<div class="ms-auto">	<i class='bx bx-wallet font-30'></i>
+									</div>
+								</div>
+							</div>
+							<div class="" id="chart2"></div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card radius-10 overflow-hidden">
+							<div class="card-body">
+								<div class="d-flex align-items-center">
+									<div>
+										<p class="mb-0">Total Users</p>
+										<h5 class="mb-0">24.5K</h5>
+									</div>
+									<div class="ms-auto">	<i class='bx bx-group font-30'></i>
+									</div>
+								</div>
+							</div>
+							<div class="" id="chart3"></div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card radius-10 overflow-hidden">
+							<div class="card-body">
+								<div class="d-flex align-items-center">
+									<div>
+										<p class="mb-0">Comments</p>
+										<h5 class="mb-0">869</h5>
+									</div>
+									<div class="ms-auto">	<i class='bx bx-chat font-30'></i>
+									</div>
+								</div>
+							</div>
+							<div class="" id="chart4"></div>
+						</div>
+					</div>
+			  </div><!--end row-->
+			  
+			  
+			  <div class="row">
+			    <div class="col-12 col-xl-8 d-flex">
+				  <div class="card radius-10 w-100">
+						<div class="card-body">
+							<div class="" id="chart5"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-xl-4 d-flex">
+				  <div class="card radius-10 w-100">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+									<div>
+										<h5 class="mb-1">Sales Target</h5>
+									</div>
+									<div class="font-22 ms-auto"><i class="bx bx-dots-horizontal-rounded"></i>
+									</div>
+								</div>
+							<div class="mt-4" id="chart6"></div>
+							<div class="d-flex align-items-center">
+									<div>
+										<h2 class="mb-0">2248</h2>
+										<p class="mb-0">/2,800 target</p>
+									</div>
+									<div class="ms-auto d-flex align-items-center border radius-10 px-2">
+									  <i class='bx bxs-checkbox font-22 me-1 text-primary'></i><span>Marketing Sales</span>
+									</div>
+							  </div>
+						</div>
+					</div>
+				</div>
+			  </div><!--end row-->
 
-								   ?>	
-							  <div class="entry">
-								<div class="entry-thumb"><a href="product.php?id= <?php echo $row['p_id'] ?>"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($row['image']); ?>" alt="Product"></a></div>
-								<div class="entry-content">
-								  <h4 class="entry-title"><a href="product.php?id= <?php echo $row['p_id'] ?>"><?php echo $row['p_name'] ?></a></h4><span class="entry-meta">$<?php echo $row['price'] ?></span>
+
+			  <div class="row row-cols-1 row-cols-xl-2">
+				<div class="col d-flex">
+					<div class="card radius-10 w-100">
+						<div class="card-body">
+							<div class="" id="chart7"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col d-flex">
+					<div class="card radius-10 w-100">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<h5 class="mb-1">Sales Report</h5>
+								</div>
+								<div class="font-22 ms-auto"><i class="bx bx-dots-horizontal-rounded"></i>
+								</div>
+							</div>
+							<div class="" id="chart8"></div>
+						</div>
+					</div>
+				</div>
+			  </div><!--end row-->
+
+			  <div class="row">
+				<div class="col-12 col-xl-4 col-xxl-3 d-flex">
+					<div class="card radius-10 w-100 overflow-hidden">
+						<div class="card-body">
+							<p class="mb-1">Overall Sales Performance</p>
+							<div class="">
+								<h2 class="mb-0">$84,126.5</h2>
+								<p class="mb-0 text-success">+2.5% vs last month</p>
+							</div>
+						</div>
+						<div class="" id="chart9"></div>
+					</div>
+				</div>
+				<div class="col-12 col-xl-8 col-xxl-9 d-flex">
+					<div class="card w-100 radius-10">
+						<div class="row g-0">
+						  <div class="col-md-4 border-end">
+							<div class="card-body">
+							  <h5 class="card-title">Top Sales Locations</h5>
+							  <h2 class="mt-4 mb-1">25.860 <i class="flag-icon flag-icon-us rounded"></i></h2>
+							  <p class="mb-0 text-secondary">Our Most Customers in US</p>
+							</div>
+							<ul class="list-group mt-4 list-group-flush">
+								<li class="list-group-item d-flex align-items-center">
+								  <i class='bx bxs-circle me-1 text-success'></i>
+								  <span>Massive</span>
+								  <strong class="ms-auto">18.4k</strong>
+								</li>
+								<li class="list-group-item d-flex align-items-center">
+								  <i class='bx bxs-circle me-1 text-danger'></i>
+								  <span>Large</span>
+								  <strong class="ms-auto">6.9k</strong>
+								</li>
+								<li class="list-group-item d-flex align-items-center">
+								  <i class='bx bxs-circle me-1 text-primary'></i>
+								  <span>Medium</span>
+								  <strong class="ms-auto">5.4k</strong>
+								</li>
+								<li class="list-group-item d-flex align-items-center">
+								  <i class='bx bxs-circle me-1 text-warning'></i>
+								  <span>Small</span>
+								  <strong class="ms-auto">875</strong>
+								</li>
+							</ul>
+						  </div>
+						  <div class="col-md-8">
+							  <div class="p-3">
+								<div class="" id="geographic-map"></div>
+							  </div>
+						  </div>
+						</div>
+					  </div>
+				</div>
+			  </div><!--end row-->
+
+			   <div class="row">
+				 <div class="col-12 col-xl-4 d-flex">
+					<div class="card radius-10 w-100">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<h5 class="mb-0">New Customers</h5>
+								</div>
+								<div class="font-22 ms-auto"><i class='bx bx-dots-horizontal-rounded'></i>
+								</div>
+							</div>
+						</div>
+						<div class="customers-list p-3 mb-3">
+							<div class="customers-list-item d-flex align-items-center border-top border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-1.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Emy Jackson</h6>
+									<p class="mb-0 font-13 text-secondary">emy_jac@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-2.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Martin Hughes</h6>
+									<p class="mb-0 font-13 text-secondary">martin.hug@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-3.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Laura Madison</h6>
+									<p class="mb-0 font-13 text-secondary">laura_01@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-4.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Shoan Stephen</h6>
+									<p class="mb-0 font-13 text-secondary">s.stephen@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-5.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Keate Medona</h6>
+									<p class="mb-0 font-13 text-secondary">Keate@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-6.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Paul Benn</h6>
+									<p class="mb-0 font-13 text-secondary">pauly.b@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-7.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Winslet Maya</h6>
+									<p class="mb-0 font-13 text-secondary">winslet_02@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-8.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Bruno Bernard</h6>
+									<p class="mb-0 font-13 text-secondary">bruno.b@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-9.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Merlyn Dona</h6>
+									<p class="mb-0 font-13 text-secondary">merlyn.d@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+							<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div class="">
+									<img src="assets/images/avatars/avatar-10.png" class="rounded-circle" width="46" height="46" alt="" />
+								</div>
+								<div class="ms-2">
+									<h6 class="mb-1 font-14">Alister Campel</h6>
+									<p class="mb-0 font-13 text-secondary">alister_42@xyz.com</p>
+								</div>
+								<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bxs-phone' ></i></a>
+									<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				 </div>
+				 <div class="col-12 col-xl-4 d-flex">
+					<div class="card radius-10 w-100 overflow-hidden">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<h5 class="mb-0">Store Metrics</h5>
+								</div>
+								<div class="font-22 ms-auto"><i class='bx bx-dots-horizontal-rounded'></i>
+								</div>
+							</div>
+						</div>
+
+						<div class="store-metrics p-3 mb-3">
+							
+                            <div class="card mt-3 radius-10 border shadow-none">
+								<div class="card-body">
+                                    <div class="d-flex align-items-center">
+										<div>
+											<p class="mb-0 text-secondary">Total Products</p>
+											<h4 class="mb-0">856</h4>
+										</div>
+										<div class="widgets-icons bg-light-primary text-primary ms-auto"><i class='bx bxs-shopping-bag' ></i>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card radius-10 border shadow-none">
+								<div class="card-body">
+                                    <div class="d-flex align-items-center">
+										<div>
+											<p class="mb-0 text-secondary">Total Customers</p>
+											<h4 class="mb-0">45,241</h4>
+										</div>
+										<div class="widgets-icons bg-light-danger text-danger ms-auto"><i class='bx bxs-group' ></i>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card radius-10 border shadow-none">
+								<div class="card-body">
+                                    <div class="d-flex align-items-center">
+										<div>
+											<p class="mb-0 text-secondary">Total Categories</p>
+											<h4 class="mb-0">98</h4>
+										</div>
+										<div class="widgets-icons bg-light-success text-success ms-auto"><i class='bx bxs-category' ></i>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card radius-10 border shadow-none">
+								<div class="card-body">
+                                    <div class="d-flex align-items-center">
+										<div>
+											<p class="mb-0 text-secondary">Total Orders</p>
+											<h4 class="mb-0">124</h4>
+										</div>
+										<div class="widgets-icons bg-light-info text-info ms-auto"><i class='bx bxs-cart-add' ></i>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card radius-10 border shadow-none mb-0">
+								<div class="card-body">
+                                    <div class="d-flex align-items-center">
+										<div>
+											<p class="mb-0 text-secondary">Total Vendors</p>
+											<h4 class="mb-0">55</h4>
+										</div>
+										<div class="widgets-icons bg-light-warning text-warning ms-auto"><i class='bx bxs-user-account' ></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				 </div>
+
+				 <div class="col-12 col-xl-4 d-flex">
+					<div class="card radius-10 w-100 ">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<h5 class="mb-1">Top Products</h5>
+								</div>
+								<div class="font-22 ms-auto"><i class="bx bx-dots-horizontal-rounded"></i>
+								</div>
+							</div>
+						</div>
+
+						<div class="product-list p-3 mb-3">
+
+							 <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/01.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Black Boost Chair</h6>
+									<p class="mb-0">148 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$246.24</h6>
 								</div>
 							  </div>
-				
-				<?php } } ?>
-              
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <div class="widget widget-featured-products">
-              <h3 class="widget-title">New Arrivals</h3>
-              <!-- Entry-->
-              <?php 
-								   $ch1 = "SELECT * FROM offers WHERE status = '1' AND offer = 'New Arrival'";
-								   $rr1=mysqli_query($con,$ch1);
-								   while($row1=mysqli_fetch_array($rr1))
-								   {
-									   $pid=$row1['p_id'];
-                                   $ch = "SELECT * FROM product WHERE status = '1' AND p_id = '$pid'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
-
-								   ?>	
-							  <div class="entry">
-								<div class="entry-thumb"><a href="product.php?id= <?php echo $row['p_id'] ?>"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($row['image']); ?>" alt="Product"></a></div>
-								<div class="entry-content">
-								  <h4 class="entry-title"><a href="product.php?id= <?php echo $row['p_id'] ?>"><?php echo $row['p_name'] ?></a></h4><span class="entry-meta">$<?php echo $row['price'] ?></span>
+							 
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/03.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Red Single Sofa</h6>
+									<p class="mb-0">122 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$328.14</h6>
 								</div>
 							  </div>
-				
-				<?php } } ?>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <div class="widget widget-featured-products">
-              <h3 class="widget-title">Hot Product</h3>
-              <!-- Entry-->
-				<?php 
-								   $ch1 = "SELECT * FROM offers WHERE status = '1' AND offer = 'Hot Product'";
-								   $rr1=mysqli_query($con,$ch1);
-								   while($row1=mysqli_fetch_array($rr1))
-								   {
-									   $pid=$row1['p_id'];
-                                   $ch = "SELECT * FROM product WHERE status = '1' AND p_id = '$pid'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
-
-								   ?>	
-							  <div class="entry">
-								<div class="entry-thumb"><a href="product.php?id= <?php echo $row['p_id'] ?>"><img src="<?php echo'data:image/jpeg;base64,'. base64_encode($row['image']); ?>" alt="Product"></a></div>
-								<div class="entry-content">
-								  <h4 class="entry-title"><a href="product.php?id= <?php echo $row['p_id'] ?>"><?php echo $row['p_name'] ?></a></h4><span class="entry-meta">$<?php echo $row['price'] ?></span>
+							
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/04.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Pink Rounded Sofa</h6>
+									<p class="mb-0">105 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$124.35</h6>
 								</div>
 							  </div>
-				
-				<?php } } ?>
-             
-            </div>
-          </div>
-        </div>
-      </section>
-	  <!-- new Products Carousel-->
-      <section class="container padding-top-1x padding-bottom-3x">
-        <h3 class="text-center mb-30">New Arrival</h3>
-        <div class="owl-carousel" data-owl-carousel="{ &quot;nav&quot;: false, &quot;dots&quot;: true, &quot;margin&quot;: 30, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;576&quot;:{&quot;items&quot;:2},&quot;768&quot;:{&quot;items&quot;:3},&quot;991&quot;:{&quot;items&quot;:4},&quot;1200&quot;:{&quot;items&quot;:3}} }">
-          <!-- Product-->
-			<?php
-								   $ch1 = "SELECT * FROM offers WHERE status = '1' AND offer = 'New Arrival'";
-								   $rr1=mysqli_query($con,$ch1);
-								  while($row1=mysqli_fetch_array($rr1))
-								   {
-									   $pid=$row1['p_id'];
-								   $ch = "SELECT * FROM product WHERE status = '1'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
+							 
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/05.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Brown Single Table</h6>
+									<p class="mb-0">201 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$158.34</h6>
+								</div>
+							  </div>
+							  
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/06.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Grey Long Chair</h6>
+									<p class="mb-0">146 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">158.24</h6>
+								</div>
+							  </div>
+							  
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/07.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Beautiful Sofa</h6>
+									<p class="mb-0">210 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$520.24</h6>
+								</div>
+							  </div>
+							 
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/08.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Grey Stand Table</h6>
+									<p class="mb-0">115 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$345.24</h6>
+								</div>
+							  </div>
+							 
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/09.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Brown Single Table</h6>
+									<p class="mb-0">116 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$126.24</h6>
+								</div>
+							  </div>
+							 
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/10.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Four Leg Chair</h6>
+									<p class="mb-0">154 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$425.24</h6>
+								</div>
+							  </div>
+							 
+							  <div class="d-flex align-items-center py-3 border-bottom cursor-pointer">
+								<div class="product-img me-2">
+									 <img src="assets/images/products/11.png" alt="product img">
+								  </div>
+								<div class="">
+									<h6 class="mb-0 font-14">Blue Light T-Shirt</h6>
+									<p class="mb-0">186 Sales</p>
+								</div>
+								<div class="ms-auto">
+									<h6 class="mb-0">$149.34</h6>
+								</div>
+							  </div>
+							 
+						</div>
+					</div>
+				 </div>
+				</div><!--end row-->
 
-								   ?>
-			<form method="post">
-           <div class="grid-item">
-            <div class="product-card"  style="border: 1px solid #0da9ef;">
-              <div class="rating-stars">
-					<?php
-									   $pid=$row['p_id'];
-									$rreview="SELECT sum(review) as u_rate, count(id) as countt FROM reviews WHERE p_id='$pid'";
-									$rrew=mysqli_query($con, $rreview);
-									while($r2=mysqli_fetch_array($rrew))
-									{?>
-										
-										<?php
-									if($r2['u_rate']>-1 || $r2['countt']>0)
-									 {
-										$main=($r2['u_rate']/$r2['countt']);
-										 
-									 }
-										else
-										{
-											$main=0;
-										}
-										
-										for($i=1; $i<6; $i++)
-										{
-											if(($i-1<$main)&&($i>$main))
-											{
-												?>
-				                        	<i class="icon-star"></i>
-										<?php
-												
-											}
-											else if($i<$main)
-											{
-												?>
-					                             <i class="icon-star filled"></i>
-										<?php
-												
-											}
-											else{ 
-												?>
-												<i class="icon-star"></i>
-                                            <?php      
-											
-											}
-										}
-							     ?>
-									<?php }   ?>
-					
-                </div><a class="product-thumb" href="product.php?id=<?php echo $row['p_id'] ?>"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($row['image']); ?>" alt="Product"></a>
-              <h3 class="product-title"><a href="product.php?id=<?php echo $row['p_id'] ?>"><?php echo $row['p_name'] ?></a></h3>
-              <h4 class="product-price">
-                <del>$<?php echo $row['price'] ?></del>$<?php echo $row['sale_price'] ?>
-              </h4>
-              <div class="product-buttons">
-				  <?php
-					if(isset($_SESSION['SESS-ID']))
-					{?>
-                <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist" name="wishlist1<?php echo $row['p_id'] ?>"><i class="icon-heart"></i></button>
-				  
-                <?php $qty0=$row['quantity']; 
-				  if($qty0 <= 0)
-				  {?>
-					<button class="btn btn-outline-secondary btn-sm">Not Available</button> 
-				  <?php } else {?>
-					   <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!" name="cart1<?php echo $row['p_id'] ?>">Add to Cart</button> 
-				 <?php } ?>
-				  <?php } else {?>
-					
-				  <a class="btn btn-outline-secondary btn-sm btn-wishlist" title="Login for Whishlist" href="account-login.php"><i class="icon-heart"></i></a>
-                <a class="btn btn-outline-primary btn-sm" title="Login for Cart"  href="account-login.php">Add to Cart</a>
-						
-					<?php } ?>
-              </div>
-            </div>
-          </div>
-			</form>	
-			
-			<?php } ?>
-									  <?php 
-	                                  $pid=$row['p_id'];
-									   $qty=$row['quantity'];
-									  if(isset($_REQUEST['cart1'.$pid]))
-									   {
-										       $uid=$_SESSION['SESS-ID'];
-											   $o_id=0;
-										       if($row['sale_price']<=0)
-											   {
-												  $p_price=$row['price']; 
-												   
-											   }
-										       else
-											   {
-												  $p_price=$row['sale_price']; 
-												   
-											   }
-										      
-											   $qry1 = "SELECT * FROM cart WHERE u_id = '$uid' AND p_id = '$pid' AND status='0'";
-												$r1=mysqli_query($con,$qry1);
-												$row1 = mysqli_fetch_assoc($r1);
-												if((mysqli_num_rows($r1))>0)
-												{
-													$up="SELECT * FROM cart WHERE p_id='$pid' AND u_id='$uid'";
-													$u=mysqli_query($con, $up);
-													while($r3=mysqli_fetch_array($u))
-													{ 
-													  
-													 $qnty=$r3['p_qty']+1;
-													$p_total=$p_price*$qnty;
-													$p_tax=0;
-													$p_ship=0;
-													$g_total=$p_ship+$p_total+$p_tax;
-                                                     $qrr = "UPDATE cart SET p_qty = '$qnty', p_total='$p_total', g_total='$g_total' WHERE  u_id = '$uid' AND p_id = '$pid'";
-										         	mysqli_query($con,$qrr);
-													 
-													} 
-													
-												}
-												else
-												{
-												       $p_qty=1;
-													   $p_total=$p_price*$p_qty;
-													   $p_tax=0;
-													   $p_ship=0;
-													   $g_total=$p_ship+$p_total+$p_tax; 
-													   $status=0; 
-													$qr= "INSERT INTO cart (id, u_id, order_id, p_id, p_price, p_qty, p_total, p_tax, p_ship, g_total, status) VALUES ( NULL, '$uid', '$o_id', '$pid', '$p_price', '$p_qty', '$p_total', '$p_tax', '$p_ship', '$g_total', '$status')";
-									           		mysqli_query($con,$qr);
-												}
-										    $qty--;
-										  	$qry5 = "UPDATE product SET quantity = '$qty' WHERE  p_id ='$pid'";
-					                     	mysqli_query($con,$qry5);
-										  echo "<script> window.location.replace('index.php')</script>";
-									   }
-									  
-									   ?>
+
+				<div class="row">
+					<div class="col">
+						<div class="card radius-10 mb-0">
+							<div class="card-body">
+								<div class="d-flex align-items-center">
+									<div>
+										<h5 class="mb-1">Recent Orders</h5>
+									</div>
+									<div class="ms-auto">
+										<a href="javscript:;" class="btn btn-primary btn-sm radius-30">View All Products</a>
+									</div>
+								</div>
+
+                               <div class="table-responsive mt-3">
+								   <table class="table align-middle mb-0">
+									   <thead class="table-light">
+										   <tr>
+											   <th>Tracking ID</th>
+											   <th>Products Name</th>
+											   <th>Date</th>
+											   <th>Status</th>
+											   <th>Price</th>
+											   <th>Actions</th>
+										   </tr>
+									   </thead>
+									   <tbody>
+										   <tr>
+											   <td>#55879</td>
+											   <td>
+												<div class="d-flex align-items-center">
+													<div class="recent-product-img">
+														<img src="assets/images/products/15.png" alt="">
+													</div>
+													<div class="ms-2">
+														<h6 class="mb-1 font-14">Light Red T-Shirt</h6>
+													</div>
+												</div>
+											   </td>
+											   <td>22 Jun, 2020</td>
+											   <td class=""><span class="badge bg-light-success text-success w-100">Completed</span></td>
+											   <td>#149.25</td>
+											   <td>
+												<div class="d-flex order-actions">	<a href="javascript:;" class="text-danger bg-light-danger border-0"><i class='bx bxs-trash'></i></a>
+													<a href="javascript:;" class="ms-4 text-primary bg-light-primary border-0"><i class='bx bxs-edit' ></i></a>
+												</div>
+											   </td>
+										   </tr>
+										   <tr>
+											<td>#88379</td>
+											<td>
+											 <div class="d-flex align-items-center">
+												 <div class="recent-product-img">
+													 <img src="assets/images/products/16.png" alt="">
+												 </div>
+												 <div class="ms-2">
+													 <h6 class="mb-1 font-14">Grey Headphone</h6>
+												 </div>
+											 </div>
+											</td>
+											<td>22 Jun, 2020</td>
+											<td class=""><span class="badge bg-light-danger text-danger w-100">Cancelled</span></td>
+											<td>#149.25</td>
+											<td>
+												<div class="d-flex order-actions">	<a href="javascript:;" class="text-danger bg-light-danger border-0"><i class='bx bxs-trash'></i></a>
+													<a href="javascript:;" class="ms-4 text-primary bg-light-primary border-0"><i class='bx bxs-edit' ></i></a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>#68823</td>
+											<td>
+											 <div class="d-flex align-items-center">
+												 <div class="recent-product-img">
+													 <img src="assets/images/products/19.png" alt="">
+												 </div>
+												 <div class="ms-2">
+													 <h6 class="mb-1 font-14">Grey Hand Watch</h6>
+												 </div>
+											 </div>
+											</td>
+											<td>22 Jun, 2020</td>
+											<td class=""><span class="badge bg-light-warning text-warning w-100">Pending</span></td>
+											<td>#149.25</td>
+											<td>
+												<div class="d-flex order-actions">	<a href="javascript:;" class="text-danger bg-light-danger border-0"><i class='bx bxs-trash'></i></a>
+													<a href="javascript:;" class="ms-4 text-primary bg-light-primary border-0"><i class='bx bxs-edit' ></i></a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>#54869</td>
+											<td>
+											 <div class="d-flex align-items-center">
+												 <div class="recent-product-img">
+													 <img src="assets/images/products/07.png" alt="">
+												 </div>
+												 <div class="ms-2">
+													 <h6 class="mb-1 font-14">Brown Sofa</h6>
+												 </div>
+											 </div>
+											</td>
+											<td>22 Jun, 2020</td>
+											<td class=""><span class="badge bg-light-success text-success w-100">Completed</span></td>
+											<td>#149.25</td>
+											<td>
+												<div class="d-flex order-actions">	<a href="javascript:;" class="text-danger bg-light-danger border-0"><i class='bx bxs-trash'></i></a>
+													<a href="javascript:;" class="ms-4 text-primary bg-light-primary border-0"><i class='bx bxs-edit' ></i></a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>#22536</td>
+											<td>
+											 <div class="d-flex align-items-center">
+												 <div class="recent-product-img">
+													 <img src="assets/images/products/17.png" alt="">
+												 </div>
+												 <div class="ms-2">
+													 <h6 class="mb-1 font-14">Black iPhone 11</h6>
+												 </div>
+											 </div>
+											</td>
+											<td>22 Jun, 2020</td>
+											<td class=""><span class="badge bg-light-success text-success w-100">Completed</span></td>
+											<td>#149.25</td>
+											<td>
+												<div class="d-flex order-actions">	<a href="javascript:;" class="text-danger bg-light-danger border-0"><i class='bx bxs-trash'></i></a>
+													<a href="javascript:;" class="ms-4 text-primary bg-light-primary border-0"><i class='bx bxs-edit' ></i></a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>#25796</td>
+											<td>
+											 <div class="d-flex align-items-center">
+												 <div class="recent-product-img">
+													 <img src="assets/images/products/14.png" alt="">
+												 </div>
+												 <div class="ms-2">
+													 <h6 class="mb-1 font-14">Men Yellow T-Shirt</h6>
+												 </div>
+											 </div>
+											</td>
+											<td>22 Jun, 2020</td>
+											<td class=""><span class="badge bg-light-warning text-warning w-100">Pending</span></td>
+											<td>#149.25</td>
+											<td>
+												<div class="d-flex order-actions">	<a href="javascript:;" class="text-danger bg-light-danger border-0"><i class='bx bxs-trash'></i></a>
+													<a href="javascript:;" class="ms-4 text-primary bg-light-primary border-0"><i class='bx bxs-edit' ></i></a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>#98754</td>
+											<td>
+											 <div class="d-flex align-items-center">
+												 <div class="recent-product-img">
+													 <img src="assets/images/products/08.png" alt="">
+												 </div>
+												 <div class="ms-2">
+													 <h6 class="mb-1 font-14">Grey Stand Table</h6>
+												 </div>
+											 </div>
+											</td>
+											<td>22 Jun, 2020</td>
+											<td class=""><span class="badge bg-light-danger text-danger w-100">Cancelled</span></td>
+											<td>#149.25</td>
+											<td>
+												<div class="d-flex order-actions">	<a href="javascript:;" class="text-danger bg-light-danger border-0"><i class='bx bxs-trash'></i></a>
+													<a href="javascript:;" class="ms-4 text-primary bg-light-primary border-0"><i class='bx bxs-edit' ></i></a>
+												</div>
+											</td>
+										</tr>
+									   </tbody>
+								   </table>
+							   </div>
 								
-							          <?php
-									   
-										$pid=$row['p_id'];
-									   if(isset($_REQUEST['wishlist1'.$pid]))
-													   {
-										$uid=$_SESSION['SESS-ID'];
-										$qry1 = "SELECT * FROM wishlist WHERE u_id = '$uid' AND p_id = '$pid'";
-												$r1=mysqli_query($con,$qry1);
-												$row1 = mysqli_fetch_assoc($r1);
-												if((mysqli_num_rows($r1))>0)
-												{
-												 
-												}
-										        else
-												{
-													$q= "INSERT INTO wishlist (id, p_id,u_id) VALUES ( NULL, '$pid', '$uid')";
-																mysqli_query($con,$q);
-																echo "<script> window.location.replace('index.php')</script>";
-												}
-																
-													   }
-										
-								?>
-								  
-							<?php	  } ?>
-        </div>
-      </section>
-      <!-- Promo #2-->
-      <section class="container-fluid">
-        <div class="row justify-content-center">
-          <div class="col-xl-10 col-lg-12">
-            <div class="fw-section rounded padding-top-4x padding-bottom-4x" style="background-image: url(img/banners/home02.jpg);"><span class="overlay rounded" style="opacity: .35;"></span>
-              <div class="text-center">
-                <h2 class="display-2 text-bold text-white text-shadow">HOT PRODUCTS!</h2>
-                <h4 class="d-inline-block h2 text-normal text-white text-shadow border-default border-left-0 border-right-0 mb-4">at our outlet stores</h4><br><a class="btn btn-primary margin-bottom-none" href="shop.php">Locate Stores</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Featured Products Carousel-->
-      <section class="container padding-top-3x padding-bottom-3x">
-        <h3 class="text-center mb-30">Available Products</h3>
-        <div class="owl-carousel" data-owl-carousel="{ &quot;nav&quot;: false, &quot;dots&quot;: true, &quot;margin&quot;: 30, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;576&quot;:{&quot;items&quot;:2},&quot;768&quot;:{&quot;items&quot;:3},&quot;991&quot;:{&quot;items&quot;:4},&quot;1200&quot;:{&quot;items&quot;:4}} }">
-          <!-- Product-->
-			<?php 
-								   $ch = "SELECT * FROM product WHERE status = '1'";
-								   $rr=mysqli_query($con,$ch);
-								   while($row=mysqli_fetch_array($rr))
-								   {
+							</div>
+						</div>
+					</div>
+				</div><!--end row-->
+			
+			</div>
+		</div>
+		<!--end page wrapper -->
+		<!--start overlay-->
+		<div class="overlay toggle-icon"></div>
+		<!--end overlay-->
+		<!--Start Back To Top Button--> <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
+		<!--End Back To Top Button-->
+		<footer class="page-footer">
+			<p class="mb-0">Copyright © 2021. All right reserved.</p>
+		</footer>
+	</div>
+	<!--end wrapper-->
+	<!--start switcher-->
+	<div class="switcher-wrapper">
+		<div class="switcher-btn"> <i class='bx bx-cog bx-spin'></i>
+		</div>
+		<div class="switcher-body">
+			<div class="d-flex align-items-center">
+				<h5 class="mb-0 text-uppercase">Theme Customizer</h5>
+				<button type="button" class="btn-close ms-auto close-switcher" aria-label="Close"></button>
+			</div>
+			<hr/>
+			<h6 class="mb-0">Theme Styles</h6>
+			<hr/>
+			<div class="d-flex align-items-center justify-content-between">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="lightmode" checked>
+					<label class="form-check-label" for="lightmode">Light</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="darkmode">
+					<label class="form-check-label" for="darkmode">Dark</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="semidark">
+					<label class="form-check-label" for="semidark">Semi Dark</label>
+				</div>
+			</div>
+			<hr/>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" id="minimaltheme" name="flexRadioDefault">
+				<label class="form-check-label" for="minimaltheme">Minimal Theme</label>
+			</div>
+			<hr/>
+			<h6 class="mb-0">Header Colors</h6>
+			<hr/>
+			<div class="header-colors-indigators">
+				<div class="row row-cols-auto g-3">
+					<div class="col">
+						<div class="indigator headercolor1" id="headercolor1"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor2" id="headercolor2"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor3" id="headercolor3"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor4" id="headercolor4"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor5" id="headercolor5"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor6" id="headercolor6"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor7" id="headercolor7"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor8" id="headercolor8"></div>
+					</div>
+				</div>
+			</div>
+			<hr/>
+			<h6 class="mb-0">Sidebar Backgrounds</h6>
+			<hr/>
+			<div class="header-colors-indigators">
+				<div class="row row-cols-auto g-3">
+					<div class="col">
+						<div class="indigator sidebarcolor1" id="sidebarcolor1"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor2" id="sidebarcolor2"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor3" id="sidebarcolor3"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor4" id="sidebarcolor4"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor5" id="sidebarcolor5"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor6" id="sidebarcolor6"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor7" id="sidebarcolor7"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor8" id="sidebarcolor8"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--end switcher-->
+	<!-- Bootstrap JS -->
+	<script src="assets/js/bootstrap.bundle.min.js"></script>
+	<!--plugins-->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
+	<script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
+	<script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+	<script src="assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
+	<script src="assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+	<script src="assets/plugins/highcharts/js/highcharts.js"></script>
+	<script src="assets/plugins/highcharts/js/exporting.js"></script>
+	<script src="assets/plugins/highcharts/js/variable-pie.js"></script>
+	<script src="assets/plugins/highcharts/js/export-data.js"></script>
+	<script src="assets/plugins/highcharts/js/accessibility.js"></script>
+	<script src="assets/plugins/apexcharts-bundle/js/apexcharts.min.js"></script>
+	<script src="assets/js/index2.js"></script>
+	<!--app JS-->
+	<script src="assets/js/app.js"></script>
+	<script>
+		new PerfectScrollbar('.customers-list');
+		new PerfectScrollbar('.store-metrics');
+		new PerfectScrollbar('.product-list');
+	</script>
+</body>
 
-								   ?>
-			<form method="post">
-           <div class="grid-item">
-            <div class="product-card">
-              <div class="product-badge text-danger"><!--22% Off--></div><a class="product-thumb" href="product.php?id=<?php echo $row['p_id'] ?>"><img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($row['image']); ?>" alt="Product"></a>
-              <h3 class="product-title"><a href="product.php?id=<?php echo $row['p_id'] ?>"><?php echo $row['p_name'] ?></a></h3>
-              <h4 class="product-price">
-                <del>$<?php echo $row['price'] ?></del>$<?php echo $row['sale_price'] ?>
-              </h4>
-              <div class="product-buttons">
-				  <?php
-					if(isset($_SESSION['SESS-ID']))
-					{?>
-                <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist" name="wishlist1<?php echo $row['p_id'] ?>"><i class="icon-heart"></i></button>
-				  
-                <?php $qty0=$row['quantity']; 
-				  if($qty0 <= 0)
-				  {?>
-					<button class="btn btn-outline-secondary btn-sm">Not Available</button> 
-				  <?php } else {?>
-					   <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!" name="cart5<?php echo $row['p_id'] ?>">Add to Cart</button> 
-				 <?php } ?>
-				  <?php } else {?>
-					
-				  <a class="btn btn-outline-secondary btn-sm btn-wishlist" title="Login for Whishlist" href="account-login.php"><i class="icon-heart"></i></a>
-                <a class="btn btn-outline-primary btn-sm" title="Login for Cart"  href="account-login.php">Add to Cart</a>
-						
-					<?php } ?>
-              </div>
-            </div>
-          </div>
-			</form>	
-			<?php 
-	                                  $pid=$row['p_id'];
-									   $qty=$row['quantity'];
-									  if(isset($_REQUEST['cart5'.$pid]))
-									   {
-										       $uid=$_SESSION['SESS-ID'];
-											   $o_id=0;
-										       if($row['sale_price']<=0)
-											   {
-												  $p_price=$row['price']; 
-												   
-											   }
-										       else
-											   {
-												  $p_price=$row['sale_price']; 
-												   
-											   }
-										      
-											   $qry1 = "SELECT * FROM cart WHERE u_id = '$uid' AND p_id = '$pid' AND status='0'";
-												$r1=mysqli_query($con,$qry1);
-												$row1 = mysqli_fetch_assoc($r1);
-												if((mysqli_num_rows($r1))>0)
-												{
-													$up="SELECT * FROM cart WHERE p_id='$pid' AND u_id='$uid'";
-													$u=mysqli_query($con, $up);
-													while($r3=mysqli_fetch_array($u))
-													{ 
-													  
-													 $qnty=$r3['p_qty']+1;
-													$p_total=$p_price*$qnty;
-													$p_tax=0;
-													$p_ship=0;
-													$g_total=$p_ship+$p_total+$p_tax;
-                                                     $qrr = "UPDATE cart SET p_qty = '$qnty', p_total='$p_total', g_total='$g_total' WHERE  u_id = '$uid' AND p_id = '$pid'";
-										         	mysqli_query($con,$qrr);
-													 
-													} 
-													
-												}
-												else
-												{
-												       $p_qty=1;
-													   $p_total=$p_price*$p_qty;
-													   $p_tax=0;
-													   $p_ship=0;
-													   $g_total=$p_ship+$p_total+$p_tax; 
-													   $status=0; 
-													$qr= "INSERT INTO cart (id, u_id, order_id, p_id, p_price, p_qty, p_total, p_tax, p_ship, g_total, status) VALUES ( NULL, '$uid', '$o_id', '$pid', '$p_price', '$p_qty', '$p_total', '$p_tax', '$p_ship', '$g_total', '$status')";
-									           		mysqli_query($con,$qr);
-												}
-										    $qty--;
-										  	$qry5 = "UPDATE product SET quantity = '$qty' WHERE  p_id ='$pid'";
-					                     	mysqli_query($con,$qry5);
-										  echo "<script> window.location.replace('index.php')</script>";
-									   }
-									  
-									   ?>
-								
-								<?php
-									   
-										$pid=$row['p_id'];
-									   if(isset($_REQUEST['wishlist1'.$pid]))
-													   {
-										$uid=$_SESSION['SESS-ID'];
-										$qry1 = "SELECT * FROM wishlist WHERE u_id = '$uid' AND p_id = '$pid'";
-												$r1=mysqli_query($con,$qry1);
-												$row1 = mysqli_fetch_assoc($r1);
-												if((mysqli_num_rows($r1))>0)
-												{
-												 
-												}
-										        else
-												{
-													$q= "INSERT INTO wishlist (id, p_id,u_id) VALUES ( NULL, '$pid', '$uid')";
-																mysqli_query($con,$q);
-																echo "<script> window.location.replace('index.php')</script>";
-												}
-																
-													   }
-										
-								?>
-			<?php } ?>
-        </div>
-      </section>
-   
-      <!-- Site Footer-->
-     <?php include('footer.php') ?>
-    </div>
-	  
-    <a class="scroll-to-top-btn" href="#"><i class="icon-arrow-up"></i></a>
-    <div class="site-backdrop"></div>
-    <script src="js/vendor.min.js"></script>
-    <script src="js/scripts.min.js"></script>
-    <script src="customizer/customizer.min.js"></script>
-	  <script>
-	  
-// Set the date we're counting down to
-var countDownDate = new Date("Jun 30, 2021 12:00:00").getTime();
-
-// Update the count down every 1 second
-var x = setInterval(function() {
-
-  // Get today's date and time
-  var now = new Date().getTime();
-    
-  // Find the distance between now and the count down date
-  var distance = countDownDate - now;
-    
-  // Time calculations for days, hours, minutes and seconds
- var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-  // Output the result in an element with id="demo"
-	document.getElementById("dd").innerHTML = days ;
-	document.getElementById("h").innerHTML = hours ;
-	document.getElementById("m").innerHTML = minutes ;
-	document.getElementById("d").innerHTML = seconds ;
-	
-	document.getElementById("d1").innerHTML = days + "Day";
-	document.getElementById("h1").innerHTML = hours + "Hour" ;
-	document.getElementById("m1").innerHTML = minutes + "Min" ;
-	document.getElementById("s1").innerHTML = seconds + "Sec";
-    
-  // If the count down is over, write some text 
-  if (distance < 0) {
-    clearInterval(x);
-    document.getElementById("h").innerHTML = 0;
-	  document.getElementById("m").innerHTML = 0;
-	  document.getElementById("d").innerHTML = 0;
-	  document.getElementById("dd").innerHTML = 0 + "Day";
-	document.getElementById("h1").innerHTML = 0 + "Hour" ;
-	document.getElementById("m1").innerHTML = 0 + "Min" ;
-	document.getElementById("s1").innerHTML = 0 + "Sec";
-	  
-  }
-}, 1000);
-	  </script>
-  </body>
 </html>

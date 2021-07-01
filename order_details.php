@@ -1,3 +1,9 @@
+<?php
+if (isset($_GET['detailsid'])) {
+	# code...
+	$idx=$_GET['detailsid'];
+}
+?>
 <!doctype html>
 <html lang="en">
 
@@ -37,13 +43,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Running Products </div>
+					<div class="breadcrumb-title pe-3">Order </div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Product Details</li>
+								<li class="breadcrumb-item active" aria-current="page">Order Details</li>
 							</ol>
 						</nav>
 					</div>
@@ -62,67 +68,146 @@
 				</div>
 				<!--end breadcrumb-->
 				<hr/>
-			<!--end row-->
-				<div class="card">
+			    <div class="col" align="center">
+						<div class="card text-center">
+							<div class="card-body shadow ">
+								<div class="text-primary rounded ">Invoice# <b> <?php echo $idx; ?>	</b></div>
+							</div>
+						</div>
+					</div>
+				<h5 class="mb-1 text-uppercase" style="padding: 15px;" align="center">Customer Details</h5>
+				<div class="row">
+				 <div class="col-lg-8 col-md-8 col-sm-12">
+					<div class="card shadow" style="width:100%;" align="center">
 					<div class="card-body">
-						<div class="table-responsive">
-							<table id="example2" class="table table table-bordered table-striped  table-hover" style="width:100%">
-					    		 <thead  class="bg-primary text-white">
+						<div class="table-responsive t-3">
+							<table class="table table-borderless align-middle mb-0" style="width:100%">
+								<thead class="table-light">
 									<tr>
-											   <th>Actions</th>
-											   <th>No.</th>
+											  <th class="text-primary">SHIPPING TO:</th>
+									</tr>
+								</thead>
+								 <tbody>
+									 	<?php
+
+                                        $d="SELECT * FROM checkout WHERE id='$idx'";
+                                        $dr=mysqli_query($con,$d);
+                                        $row=mysqli_fetch_array($dr) 
+                                            # code...
+                                    ?>
+									          <tr>
+												  <td><b><i class="bx bx-user"></i> Name: </b><?php echo $row['f_name'].$row['l_name'] ?> </td>
+							         		  </tr> 
+									          <tr>
+												  <td><b><i class="bx bx-map-alt"></i> Shipping Address: </b><?php echo $row['address'].", ".$row['city'].", ".$row['state'].", ".$row['country'] ?></td>
+							         		  </tr> 
+									          <tr>
+												  <td><b><i class="bx bx-phone"></i> Phone: </b><?php echo $row['phone']?> </td>
+									          </tr> 
+									          <tr>
+												  <td><b><i class="bx bx-map-pin"></i> Zip code: </b><?php echo $row['zip_code']?></td>
+									 <?php  ?>
+								 </tbody>
+								
+							</table>
+							
+						</div>
+					</div>
+					
+				</div>
+					</div>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="card shadow" style="width:100%;" align="center">
+					<div class="card-body">
+						<div class="table-responsive t-3">
+							<table class="table table-borderless align-middle mb-0" style="width:100%">
+								<thead class="table-light">
+									<tr>
+											  <th class="text-primary">PAYMENT DETAIL:</th>
+									</tr>
+								</thead>
+								 <tbody>
+									 <?php
+
+                                        $d="SELECT * FROM payment WHERE order_id='$idx'";
+                                        $dr=mysqli_query($con,$d);
+                                        $row=mysqli_fetch_array($dr)
+                                            # code...
+                                    ?>
+									          <tr>
+												  <td><b><i class="bx bx-money"></i> Total Bill: </b>$<?php echo $row['total_price']?></td>
+							         		  </tr>
+									          <tr>
+												  <td><b><i class="bx bx-credit-card-front"></i> Payment method:</b> Online banking</td>
+							         		  </tr> 
+									           <tr>
+												  <td><b><i class="bx bx-user-check"></i> Name on card:</b> <?php echo $row['name']?></td>
+							         		  </tr> 
+									          <tr>
+												  <td><b><i class="bx bx-credit-card"></i> Credit card: </b><?php echo $row['card_no']?></td>
+							         		  </tr> 
+									    <?php  ?>      
+								 </tbody>
+								
+							</table>
+							
+						</div>
+					</div>
+					
+				</div>
+					</div>
+				</div>
+				<hr/>
+	       		<h5 class="mb-1 text-uppercase" style="padding: 15px;" align="center">order Details</h5>
+				<div class="card shadow">
+					<div class="card-body">
+						<div class="table-responsive t-3">
+							<table class="table align-middle mb-0" style="width:100%">
+								<thead class="table-light ">
+									<tr>
 											   <th>Product Name</th>
-										       <th>Brand</th>
-											   <th>Price</th>
-										       <th>Sale Price</th>
-										       <th>SKU</th>
-										       <th>Sold By</th>
+										       <th>Price</th>
+											   <th>Quantity</th>
+											   <th>Total</th>
+										       <th>Date</th>
 										   </tr>
 								</thead>
 								 <tbody>
 									 <?php
-                        $q="SELECT * FROM product";
-                        $r=mysqli_query($con,$q);
-                        while($p=mysqli_fetch_array($r)){
-                        ?> 
-										   <tr>
-											   <td align="center">
-												   <div class="col">
-														<div class="btn-group" role="group" aria-label="Basic example">
-															<a href="upproduct.php?id=<?php echo $p['p_id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
-															</a>
+                  		$cart="SELECT * FROM cart WHERE order_id='$idx'";
+                  		$cartr=mysqli_query($con,$cart);
+                  		while ($cartrr=mysqli_fetch_array($cartr)) {
+                  			# code...
+                  			$fet=$cartrr['p_id'];
+                            $cart2="SELECT * FROM product WHERE p_id='$fet'";
+                            $cart2r=mysqli_query($con,$cart2);
+                            while($cart2rr=mysqli_fetch_array($cart2r)){
+                  	?>
+                  	<?php
+                                        $order=$cartrr['order_id'];
 
-															<a onClick="return confirm('Do you want to remove this product?')" href="product.php?delete=<?php echo $p['p_id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
-															</a>
-														</div>
-													</div>
-											   </td>
-											   <td>#<?php echo $p['p_id']; ?></td>
+                                        $date="SELECT * FROM checkout WHERE id='$order'";
+                                        $dater=mysqli_query($con,$date);
+                                        while ($daterr=mysqli_fetch_array($dater)) {
+                                            # code...
+                                    ?>
+										   <tr>
 											   <td>
 												<div class="d-flex align-items-center">
 													<div class="recent-product-img">
-														<img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($p['image']); ?>" alt="">
+														<img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($cart2rr['image']); ?>" alt="">
 													</div>
 													<div class="ms-2">
-														<h6 class="mb-1 font-14"><?php echo $p['p_name']; ?></h6>
+														<h6 class="mb-1 font-14"><?php echo $cart2rr['p_name']; ?></h6>
 													</div>
 												</div>
 											   </td>
-											   <td><?php $b= $p['brand_id']; 
-												   $q1="SELECT * FROM brand where brand_id='$b'";
-													$r1=mysqli_query($con,$q1);
-													$p1=mysqli_fetch_array($r1);
-							                         echo $p1['name'];
-												   
-												   ?></td>
-											   <td>$<?php echo $p['price']; ?></td>
-											   <td>$<?php echo $p['sale_price']; ?></td>
-											   
-											   <td><?php echo $p['SKU']; ?></td>
-											   <td><?php echo $p['sold_by']; ?></td>
-											  
+											   <td><?php echo $cartrr['p_price'];?></td>
+											   <td><?php echo $cartrr['p_qty'];?></td>
+											   <td>$<?php echo $cartrr['g_total']; ?></td>
+											   <td><?php echo $daterr['date']; ?></td>
 										   </tr>
-										<?php } ?>
+										<?php } } } ?>
 									   </tbody>
 								
 									<?php
@@ -139,6 +224,42 @@
 							
 						</div>
 					</div>
+					
+				</div>
+				<h5 class="mb-1 text-uppercase" style="padding: 15px;" align="center">Billing Details</h5>
+				<div class="card shadow">
+					<div class="card-body">
+						<div class="table-responsive t-3">
+							<table class="table table-borderless align-middle mb-0" style="width:100%">
+								 <tbody>
+									          <tr><th>Sub Total:</th>
+												  <td>$<?php 
+										
+										$sum="SELECT sum(p_total) as p_tot FROM cart WHERE order_id='$idx'";
+										$sumr=mysqli_query($con,$sum);
+										while($sumrr=mysqli_fetch_array($sumr))
+										{
+											echo $sumrr['p_tot'];
+										}
+										
+										?></td>
+							         		  </tr> 
+									          <tr><th>Shipping Tax:</th><td>$10</td></tr> 
+									          <tr><th>Grand Total:</th><td>$<?php
+                  		$total="SELECT * FROM checkout WHERE id='$idx'";
+                  		$qry=mysqli_query($con,$total);
+                  		while ($qryr=mysqli_fetch_array($qry)) {
+                  			# code...
+                  			echo $qryr['total'];
+                  		}
+                  		?></td></tr> 
+								 </tbody>
+								
+							</table>
+							
+						</div>
+					</div>
+					
 				</div>
 				
 			</div>

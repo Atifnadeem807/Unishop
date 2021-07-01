@@ -1,3 +1,9 @@
+<?php
+if(isset($_GET['id']))
+{
+	$menuid=$_GET['id'];
+}
+?>
 <!doctype html>
 <html lang="en">
 
@@ -8,10 +14,10 @@
 	<!--favicon-->
 	<link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
 	<!--plugins-->
+	<link href="assets/plugins/Drag-And-Drop/dist/imageuploadify.min.css" rel="stylesheet" />
 	<link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
 	<link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
 	<link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
-	<link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 	<!-- loader-->
 	<link href="assets/css/pace.min.css" rel="stylesheet" />
 	<script src="assets/js/pace.min.js"></script>
@@ -30,20 +36,19 @@
 <body>
 	<!--wrapper-->
 	<div class="wrapper">
-		
 		<?php include('header.php'); ?>
-		<!--start page wrapper -->
-		<div class="page-wrapper">
+		<!--start form  -->
+			<div class="page-wrapper">
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Running Products </div>
+					<div class="breadcrumb-title pe-3">Menu</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Product Details</li>
+								<li class="breadcrumb-item active" aria-current="page">Menu Details</li>
 							</ol>
 						</nav>
 					</div>
@@ -61,89 +66,120 @@
 					</div>
 				</div>
 				<!--end breadcrumb-->
-				<hr/>
-			<!--end row-->
-				<div class="card">
-					<div class="card-body">
-						<div class="table-responsive">
-							<table id="example2" class="table table table-bordered table-striped  table-hover" style="width:100%">
-					    		 <thead  class="bg-primary text-white">
-									<tr>
-											   <th>Actions</th>
-											   <th>No.</th>
-											   <th>Product Name</th>
-										       <th>Brand</th>
-											   <th>Price</th>
-										       <th>Sale Price</th>
-										       <th>SKU</th>
-										       <th>Sold By</th>
-										   </tr>
-								</thead>
-								 <tbody>
-									 <?php
-                        $q="SELECT * FROM product";
-                        $r=mysqli_query($con,$q);
-                        while($p=mysqli_fetch_array($r)){
-                        ?> 
-										   <tr>
-											   <td align="center">
-												   <div class="col">
-														<div class="btn-group" role="group" aria-label="Basic example">
-															<a href="upproduct.php?id=<?php echo $p['p_id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
-															</a>
+				<?php 
+										     
+											if(isset($_REQUEST['updatemenu']))
+											{
+											        $menu=$_REQUEST['name'];
+													$sort=$_REQUEST['sort'];
+													$status=$_REQUEST['status'];
+												
+												    $qry1 = "SELECT * FROM main_cat WHERE name = '$menu'";
+													$r1=mysqli_query($con,$qry1);
+													if(mysqli_num_rows($r1)>1)
+													{
 
-															<a onClick="return confirm('Do you want to remove this product?')" href="product.php?delete=<?php echo $p['p_id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
-															</a>
-														</div>
-													</div>
-											   </td>
-											   <td>#<?php echo $p['p_id']; ?></td>
-											   <td>
-												<div class="d-flex align-items-center">
-													<div class="recent-product-img">
-														<img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($p['image']); ?>" alt="">
-													</div>
-													<div class="ms-2">
-														<h6 class="mb-1 font-14"><?php echo $p['p_name']; ?></h6>
-													</div>
-												</div>
-											   </td>
-											   <td><?php $b= $p['brand_id']; 
-												   $q1="SELECT * FROM brand where brand_id='$b'";
-													$r1=mysqli_query($con,$q1);
-													$p1=mysqli_fetch_array($r1);
-							                         echo $p1['name'];
-												   
-												   ?></td>
-											   <td>$<?php echo $p['price']; ?></td>
-											   <td>$<?php echo $p['sale_price']; ?></td>
-											   
-											   <td><?php echo $p['SKU']; ?></td>
-											   <td><?php echo $p['sold_by']; ?></td>
-											  
-										   </tr>
-										<?php } ?>
-									   </tbody>
-								
-									<?php
-									if(isset($_GET['delete']))
-									{
-										$d=$_GET['delete'];
-										$delete="DELETE FROM product where p_id='$d'";
-										mysqli_query($con,$delete);
-										echo "<script>window.location.replace('product.php')</script>";
-									}
+														echo "<script> alert ('Menu is already exists.');</script>";
+														echo "<script> window.location.replace('updmenu.php?id=$menuid')</script>";
+													}
+													else
+													{
+														$update="UPDATE main_cat SET name='$menu', status='$status', sort='$sort' WHERE main_id='$menuid'";
+											     	    mysqli_query($con,$update);
+											            echo "<script> window.location.replace('menu.php')</script>";
+													}
+											        
+										}
+										
+										?>
+				<div class="row">
+					<hr/>
+					<div class="col-xl-9 mx-auto">
+						
+						<div class="card border-top border-0 border-4 border-primary">
+							<div class="card-body">
+								<div class="border p-4 rounded">
+									<div class="card-title d-flex align-items-center">
+										<div><i class="bx bx-menu me-1 font-22 text-primary"></i>
+										</div>
+										<h5 class="mb-0 text-primary">Update Menu</h5>
+									</div>
+									<hr/>
+									<?php	           
+													   $ch = "SELECT * FROM main_cat WHERE  main_id='$menuid'";
+													   $rr=mysqli_query($con,$ch);
+													   while($row=mysqli_fetch_array($rr))
+													   { ?>
+									<form class="row g-3" method="post">
+									<div class="col-md-12">
+										<label for="inputFirstName" class="form-label">Menu Name</label>
+										<input type="text" name="name" class="form-control" id="inputFirstName" value="<?php echo $row['name'] ?>" required>
+									</div>	
+									<div class="col-md-12">
+										<label for="inputState" class="form-label">Status</label>
+										<select id="inputState" name="status" class="form-select">
+											<?php $x= $row['status'] ;
+											if($x==0)
+											{?>
+											<option value="1">Active</option>
+											<option value="0" selected>Disactive</option>
+										<?php } else{ ?>
+											<option value="1" selected>Active</option>
+											<option value="0">Disactive</option>
+											<?php } ?>
+											
+										</select>
+									</div>
+									<div class="col-md-12">
+										<label for="inputCity" class="form-label">Sort By</label>
+										<input type="number" class="form-control" name="sort" id="inputCity" value="<?php echo $row['sort'] ?>">
+										   
+										    
+									</div>	
+									<div class="col-12" align="center" style="margin-top: 30px;">
+										<button type="submit" name="updatemenu" class="col-12 btn btn-primary px-5">Update Menu</button>
+									</div>
+								</form>
 									
-									?>
-							</table>
-							
+									
+									<?php } ?>
+									
+									
+									<?php
+									  
+									if(isset($_REQUEST['addbrand']))
+										{
+										            $menu=$_REQUEST['name'];
+													$sort=$_REQUEST['sort'];
+													$status=$_REQUEST['status'];
+													$qry1 = "SELECT * FROM main_cat WHERE name = '$menu'";
+													$r1=mysqli_query($con,$qry1);
+													if(mysqli_num_rows($r1)>0)
+													{
+
+														echo "<script> alert ('Brand is alraedt exists.');</script>";
+														echo "<script> window.location.replace('addbrand.php')</script>";
+													}
+													else
+													{
+														$q= "INSERT INTO main_cat (main_id, name,sort,status) VALUES ( NULL, '$menu', '$sort', $status)";
+														mysqli_query($con,$q);
+														echo "<script> window.location.replace('addbrand.php')</script>";
+													}
+																
+										}
+										
+								?>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				
+				<!--end row-->
 			</div>
 		</div>
-		<!--end page wrapper -->
+		<!--end form -->
+		
 		<!--start overlay-->
 		<div class="overlay toggle-icon"></div>
 		<!--end overlay-->
@@ -257,23 +293,11 @@
 	<script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
 	<script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-	<script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
-	<script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+	<script src="assets/plugins/Drag-And-Drop/dist/imageuploadify.min.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('#example').DataTable();
-		  } );
-	</script>
-	<script>
-		$(document).ready(function() {
-			var table = $('#example2').DataTable( {
-				lengthChange: false,
-				buttons: [ 'copy', 'excel', 'pdf', 'print']
-			} );
-		 
-			table.buttons().container()
-				.appendTo( '#example2_wrapper .col-md-6:eq(0)' );
-		} );
+		$(document).ready(function () {
+			$('#image-uploadify').imageuploadify();
+		})
 	</script>
 	<!--app JS-->
 	<script src="assets/js/app.js"></script>

@@ -37,13 +37,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Running Products </div>
+					<div class="breadcrumb-title pe-3">Order </div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Product Details</li>
+								<li class="breadcrumb-item active" aria-current="page">Pending Orders</li>
 							</ol>
 						</nav>
 					</div>
@@ -62,85 +62,83 @@
 				</div>
 				<!--end breadcrumb-->
 				<hr/>
-			<!--end row-->
-				<div class="card">
+			
+				<div class="card shadow">
 					<div class="card-body">
 						<div class="table-responsive">
-							<table id="example2" class="table table table-bordered table-striped  table-hover" style="width:100%">
-					    		 <thead  class="bg-primary text-white">
-									<tr>
-											   <th>Actions</th>
-											   <th>No.</th>
-											   <th>Product Name</th>
-										       <th>Brand</th>
-											   <th>Price</th>
-										       <th>Sale Price</th>
-										       <th>SKU</th>
-										       <th>Sold By</th>
-										   </tr>
+							<table id="example2" class="table table-bordered table-striped table-hover" style="width:100%">
+								 <thead  class="bg-primary text-white">
+									<tr align="center">
+										<th>Order#</th>
+										<th>Date</th>
+										<th>Name</th>
+										<th>Phone</th>
+										<th>Total</th>
+										<th>Action</th>
+									</tr>
 								</thead>
 								 <tbody>
-									 <?php
-                        $q="SELECT * FROM product";
-                        $r=mysqli_query($con,$q);
-                        while($p=mysqli_fetch_array($r)){
-                        ?> 
-										   <tr>
+				<?php
+                $checkout="SELECT * FROM checkout WHERE status='0'";
+                $qry=mysqli_query($con,$checkout);
+                while ($qryr=mysqli_fetch_array($qry)) {
+                  # code...
+                ?>
+									 <form method="post" action="insert.php">
+										   <tr align="center">
+											   <td><a href="order_details.php?detailsid=<?php echo $qryr['id']; ?>"><?php echo $qryr['id']; ?></a></td>
+												<td><?php echo $qryr['date']; ?></td>
+											   <td><?php echo $qryr['f_name'];?> <?php  echo $qryr['l_name'];  ?> </td>
+											   <td><?php echo $qryr['phone']; ?></td>
+												<td>$<?php echo $qryr['total']; ?></td>
 											   <td align="center">
-												   <div class="col">
-														<div class="btn-group" role="group" aria-label="Basic example">
-															<a href="upproduct.php?id=<?php echo $p['p_id'];?>" class="btn btn-sm btn-primary"><i class="bx bx-edit-alt"></i>
-															</a>
-
-															<a onClick="return confirm('Do you want to remove this product?')" href="product.php?delete=<?php echo $p['p_id']; ?>"  class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
-															</a>
-														</div>
-													</div>
-											   </td>
-											   <td>#<?php echo $p['p_id']; ?></td>
-											   <td>
-												<div class="d-flex align-items-center">
-													<div class="recent-product-img">
-														<img src="<?php echo 'data:image/jpeg;base64,'. base64_encode($p['image']); ?>" alt="">
-													</div>
-													<div class="ms-2">
-														<h6 class="mb-1 font-14"><?php echo $p['p_name']; ?></h6>
-													</div>
-												</div>
-											   </td>
-											   <td><?php $b= $p['brand_id']; 
-												   $q1="SELECT * FROM brand where brand_id='$b'";
-													$r1=mysqli_query($con,$q1);
-													$p1=mysqli_fetch_array($r1);
-							                         echo $p1['name'];
 												   
-												   ?></td>
-											   <td>$<?php echo $p['price']; ?></td>
-											   <td>$<?php echo $p['sale_price']; ?></td>
+												   <div class="col">
+										<div class="btn-group" role="group" aria-label="Basic example">
+											<a href="pend_order.php?cancel=<?php echo $qryr['id']; ?>" class="btn btn-outline-primary btn-sm"><i class="bx bx-trash"></i>
+											</a>
+											<a href="pend_order.php?accept=<?php echo $qryr['id']; ?>" class="btn btn-sm btn-primary"><i class="bx bx-check-double"></i>
+											</a>
+										</div>
+									</div>
+											   </td>
 											   
-											   <td><?php echo $p['SKU']; ?></td>
-											   <td><?php echo $p['sold_by']; ?></td>
-											  
+											   
 										   </tr>
+									</form>	 
+									 
+									 <?php 
+										     
+											if(isset($_GET['accept']))
+											{
+											       $order=$_GET['accept'];
+													$status= 1;
+												   
+														$update="UPDATE checkout SET  status='$status' WHERE id='$order'";
+											     	    mysqli_query($con,$update);
+											            echo "<script> window.location.replace('pend_order.php')</script>";
+											
+										}
+				                           	if(isset($_GET['cancel']))
+											{
+											       $order=$_GET['cancel'];
+													$status= 3;
+												   
+														$update="UPDATE checkout SET  status='$status' WHERE id='$order'";
+											     	    mysqli_query($con,$update);
+											            echo "<script> window.location.replace('pend_order.php')</script>";
+											
+										}
+										
+										?>
+									 
 										<?php } ?>
 									   </tbody>
-								
-									<?php
-									if(isset($_GET['delete']))
-									{
-										$d=$_GET['delete'];
-										$delete="DELETE FROM product where p_id='$d'";
-										mysqli_query($con,$delete);
-										echo "<script>window.location.replace('product.php')</script>";
-									}
-									
-									?>
 							</table>
-							
 						</div>
 					</div>
 				</div>
-				
+				<hr/>
 			</div>
 		</div>
 		<!--end page wrapper -->
